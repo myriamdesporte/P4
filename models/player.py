@@ -1,5 +1,6 @@
 """Define the players."""
 
+
 class Player:
     def __init__(self, last_name, first_name, birth_date, national_id):
         self.last_name = last_name
@@ -12,5 +13,3 @@ class Player:
         return (f"{self.first_name} {self.last_name} ({self.national_id}) - "
                 f"Né le {self.birth_date} - "
                 f"Score : {self.score}")
-
-
