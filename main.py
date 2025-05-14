@@ -1,20 +1,21 @@
 """Entry point."""
 
-from models.player import Player
+from controllers.player_controller import PlayerController
 
 
 def main():
-    player1 = Player("Doe", "Joe", "2000-01-01", "AB12345")
-    player2 = Player("Dupont", "Jean", "2000-02_01", "CD67890")
+    controller = PlayerController()
 
-    print(player1)
-    print(player2)
+    # Création de deux joueurs via le contrôleur
+    try:
+        controller.create_player("Doe", "John", "2000-01-01", "AB12345")
+        controller.create_player("Dupont", "Jean", "2000-02-01", "CD67890")
+    except ValueError as e:
+        print(f"[Erreur] {e}")
 
-    players = [player1, player2]
-
-    Player.save_players(players)
-
-    for player in Player.load_players():
+    # Affichage de tous les joueurs
+    print("\nListe des joueurs enregistrés :")
+    for player in controller.list_players():
         print(player)
 
 
