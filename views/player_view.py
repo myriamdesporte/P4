@@ -17,16 +17,22 @@ class PlayerView:
         while True:
             print("\nChess Tournament - Player Management")
             print("1. Add a new player")
-            print("2. List all players")
-            print("3. Quit")
+            print("2. Update a player")
+            print("3. Delete a player")
+            print("4. List all players")
+            print("5. Quit")
 
             choice = input("Enter your choice: ")
 
             if choice == "1":
                 self.add_player_flow()
             elif choice == "2":
-                self.list_players_flow()
+                self.update_player_flow()
             elif choice == "3":
+                self.delete_player_flow()
+            elif choice == "4":
+                self.list_players_flow()
+            elif choice == "5":
                 print("Goodbye!")
                 break
             else:
@@ -41,7 +47,7 @@ class PlayerView:
         last_name = input("Last name: ")
         first_name = input("First name: ")
         birth_date = input("Birth date (YYYY-MM-DD): ")
-        national_chess_id = input("National Chess ID (e.g., AB12345): ")
+        national_chess_id = input("National Chess ID (ex: AB12345): ")
 
         player = self.controller.create_player(
             last_name, first_name, birth_date, national_chess_id
@@ -59,3 +65,27 @@ class PlayerView:
             print("No players found.")
         for player in players:
             print(f"- {player}")
+
+    def update_player_flow(self):
+        """
+        Update the information of a player.
+        """
+        national_id = input("Enter player's national chess id :")
+        print("Leave blank if you want to keep the current value.")
+        new_last_name = input("Enter player's last name: ")
+        new_first_name = input("Enter player's first name: ")
+        new_birth_date = input("Enter player's birth date (YYYY-MM-DD):")
+        self.controller.update_player(
+            national_id,
+            new_last_name or None,
+            new_first_name or None,
+            new_birth_date or None
+        )
+
+
+    def delete_player_flow(self):
+        """
+        Delete a player.
+        """
+        national_id = input("Enter player's national chess id :")
+        self.controller.delete_player(national_id)

@@ -49,3 +49,51 @@ class PlayerController:
         self.players.append(player)
         PlayerDAO.save_players(self.players)
         return player
+
+    def update_player(
+            self,
+            national_chess_id: str,
+            last_name: str = None,
+            first_name: str = None,
+            birth_date: str = None
+    ) -> bool:
+        """
+        Update an existing player's information.
+
+        Args:
+            national_chess_id (str): ID of the player to update.
+            last_name (str, optional): New last name.
+            first_name (str, optional): New first name.
+            birth_date (str, optional): New date of birth.
+
+        Returns:
+            bool: True if the player was found and updated, False otherwise.
+        """
+        for player in self.players:
+            if player.national_chess_id == national_chess_id:
+                if last_name:
+                    player.last_name = last_name
+                if first_name:
+                    player.first_name = first_name
+                if birth_date:
+                    player.birth_date = birth_date
+                PlayerDAO.save_players(self.players)
+                return True
+        return False
+
+    def delete_player(self, national_chess_id: str) -> bool:
+        """
+        Delete a player based on their national chess ID.
+
+        Args:
+            national_chess_id (str): ID of the player to delete.
+
+        Returns:
+            bool: True if the player was found and deleted, False otherwise.
+        """
+        for player in self.players:
+            if player.national_chess_id == national_chess_id:
+                self.players.remove(player)
+                PlayerDAO.save_players(self.players)
+                return True
+        return False
