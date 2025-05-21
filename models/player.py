@@ -1,14 +1,8 @@
 """Define the players."""
 from __future__ import annotations
-import json
-import os
-from typing import List
 
 
 class Player:
-
-    PLAYERS_DATA_FILE = "data/players.json"
-
     def __init__(
             self,
             last_name: str,
@@ -49,7 +43,7 @@ class Player:
         }
 
     @classmethod
-    def from_dict(cls, player_data: dict) -> "Player":
+    def from_dict(cls, player_data: dict) -> Player:
         """
         Create a Player instance from a dictionary.
 
@@ -65,30 +59,3 @@ class Player:
             birth_date=player_data["birth_date"],
             national_chess_id=player_data["national_chess_id"]
         )
-
-    @classmethod
-    def load_players(cls) -> List[Player]:
-        """
-        Load all players from the JSON file.
-
-        Returns:
-            List[Player]: List of all saved players.
-        """
-        if not os.path.exists(cls.PLAYERS_DATA_FILE):
-            return []
-        with open(cls.PLAYERS_DATA_FILE, "r", encoding="utf-8") as file:
-            players_data = json.load(file)
-            return [cls.from_dict(player_data) for player_data in players_data]
-
-    @classmethod
-    def save_players(cls, players: List[Player]) -> None:
-        """
-        Save all players to the JSON file.
-
-        Args:
-            players (List[Player]): List of Player instances to save.
-        """
-        os.makedirs(os.path.dirname(cls.PLAYERS_DATA_FILE), exist_ok=True)
-
-        with open(cls.PLAYERS_DATA_FILE, "w", encoding="utf-8") as file:
-            json.dump([player.to_dict() for player in players], file, indent=2)

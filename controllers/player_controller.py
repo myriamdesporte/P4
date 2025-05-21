@@ -1,7 +1,8 @@
 """Define the player controller"""
 
-from models.player import Player
 from typing import List
+from models.player import Player
+from models.player_dao import PlayerDAO
 
 
 class PlayerController:
@@ -9,7 +10,7 @@ class PlayerController:
         """
         Initialize the controller by loading existing players from storage.
         """
-        self.players: List[Player] = Player.load_players()
+        self.players: List[Player] = PlayerDAO.load_players()
 
     def list_players(self) -> List[Player]:
         """
@@ -46,5 +47,5 @@ class PlayerController:
             national_chess_id
         )
         self.players.append(player)
-        Player.save_players(self.players)
+        PlayerDAO.save_players(self.players)
         return player
