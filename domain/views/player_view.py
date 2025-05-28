@@ -3,7 +3,8 @@
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
-from controllers.player_controller import PlayerController
+from domain.controllers.player_controller import PlayerController
+from infra.repositories.json_player_repository import JSONPlayerRepository
 
 
 class PlayerView:
@@ -11,7 +12,7 @@ class PlayerView:
         """
         Initialize the view with a PlayerController instance and Rich Console.
         """
-        self.controller = PlayerController()
+        self.controller = PlayerController(JSONPlayerRepository())
         self.console = Console(force_terminal=True)
 
     def display_menu(self):

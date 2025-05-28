@@ -1,25 +1,15 @@
 """Define the player controller"""
 
-from typing import List
-from models.player import Player
-from models.player_dao import PlayerDAO
+from domain.models.player import Player
+from domain.ports.player_repository import IPlayerRepository
 
 
 class PlayerController:
-    def __init__(self):
+    def __init__(self, repository: IPlayerRepository):
         """
         Initialize the controller by loading existing players from storage.
         """
-        self.players: List[Player] = PlayerDAO.load_players()
-
-    def list_players(self) -> List[Player]:
-        """
-        Return all players loaded from the data store.
-
-        Returns:
-            List[Player]: The list of all player instances.
-        """
-        return self.players
+        self.repository = repository
 
     def create_player(
             self,
@@ -46,9 +36,19 @@ class PlayerController:
             birth_date,
             national_chess_id
         )
-        self.players.append(player)
-        PlayerDAO.save_players(self.players)
+        players = self.repository.load_players()
+        players.append(player)
+        self.repository.save_players(players)
         return player
+
+    def list_players(self):
+        """
+        Retrieve all players from the repository.
+
+        Returns:
+            List[Player]: A list of all registered players.
+        """
+        return self.repository.load_players()
 
     def update_player(
             self,
@@ -69,17 +69,12 @@ class PlayerController:
         Returns:
             bool: True if the player was found and updated, False otherwise.
         """
-        for player in self.players:
-            if player.national_chess_id == national_chess_id:
-                if last_name:
-                    player.last_name = last_name
-                if first_name:
-                    player.first_name = first_name
-                if birth_date:
-                    player.birth_date = birth_date
-                PlayerDAO.save_players(self.players)
-                return True
-        return False
+        return self.repository.update_player_by_id(
+            national_chess_id,
+            last_name,
+            first_name,
+            birth_date
+        )
 
     def delete_player(self, national_chess_id: str) -> bool:
         """
@@ -91,9 +86,4 @@ class PlayerController:
         Returns:
             bool: True if the player was found and deleted, False otherwise.
         """
-        for player in self.players:
-            if player.national_chess_id == national_chess_id:
-                self.players.remove(player)
-                PlayerDAO.save_players(self.players)
-                return True
-        return False
+        return self.repository.delete_player_by_id(national_chess_id)

@@ -1,6 +1,6 @@
 """Entry point."""
 
-from views.player_view import PlayerView
+from domain.views.player_view import PlayerView
 
 
 def main():
