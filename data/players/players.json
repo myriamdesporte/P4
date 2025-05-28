@@ -1,0 +1,14 @@
+[
+  {
+    "last_name": "Dupont",
+    "first_name": "Jean",
+    "birth_date": "2000-01-01",
+    "national_chess_id": "AB12345"
+  },
+  {
+    "last_name": "Martin",
+    "first_name": "Alice",
+    "birth_date": "1998-05-28",
+    "national_chess_id": "CD67890"
+  }
+]
