@@ -32,7 +32,7 @@ class PlayerView:
             table.add_row("2", "Ajouter un nouveau joueur")
             table.add_row("3", "Mettre à jour les informations d'un joueur")
             table.add_row("4", "Supprimer un joueur")
-            table.add_row("5", "Quitter")
+            table.add_row("5", "Retourner au menu principal")
 
             self.console.print(table)
 
@@ -47,7 +47,6 @@ class PlayerView:
             elif choice == "4":
                 self.delete_player_flow()
             elif choice == "5":
-                self.console.print("[bold blue]A bientôt![/bold blue]")
                 break
             else:
                 self.console.print("[bold red]Choix invalide. "

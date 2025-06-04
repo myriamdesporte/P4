@@ -34,7 +34,7 @@ class TournamentView:
             table.add_column("Action", style="bold blue")
             table.add_row("1", "Afficher la liste des tournois")
             table.add_row("2", "Créer un nouveau tournoi")
-            table.add_row("3", "Quitter")
+            table.add_row("3", "Retourner au menu principal")
             self.console.print(table)
             choice = input("\nEntrez votre choix: ")
             if choice == "1":
@@ -42,7 +42,6 @@ class TournamentView:
             elif choice == "2":
                 self.add_tournament_flow()
             elif choice == "3":
-                self.console.print("[bold blue]Retour au menu principal.[/bold blue]")
                 break
             else:
                 self.console.print("[bold red]Choix invalide. "
