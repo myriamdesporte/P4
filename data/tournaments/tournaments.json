@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Chess Open",
+    "location": "Paris",
+    "start_date": "2025-06-03",
+    "end_date": "2025-06-10",
+    "number_of_rounds": 4,
+    "current_round_number": 0,
+    "rounds": [],
+    "players": [],
+    "description": "Blabla"
+  }
+]
