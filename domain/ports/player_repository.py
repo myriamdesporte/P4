@@ -1,7 +1,7 @@
 """Port interface for player repository."""
 
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 from domain.models.player import Player
 
 
@@ -24,4 +24,9 @@ class IPlayerRepository(ABC):
 
     @abstractmethod
     def delete_player_by_id(self, national_chess_id: str) -> bool:
+        pass
+
+    @abstractmethod
+    def get_by_id(self, player_id: str) -> Optional[Player]:
+        """Return a player by ID or None if not found."""
         pass

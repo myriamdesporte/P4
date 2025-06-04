@@ -2,7 +2,7 @@
 
 import json
 import os
-from typing import List
+from typing import List, Optional
 from domain.models.player import Player
 from domain.ports.player_repository import IPlayerRepository
 
@@ -88,3 +88,10 @@ class JSONPlayerRepository(IPlayerRepository):
                 self.save_players(players)
                 return True
         return False
+
+    def get_by_id(self, player_id: str) -> Optional[Player]:
+        players = self.load_players()
+        for player in players:
+            if player.national_chess_id == player_id:
+                return player
+        return None
