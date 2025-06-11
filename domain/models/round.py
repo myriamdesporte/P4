@@ -1,0 +1,52 @@
+"""Define a round in a chess tournament."""
+from typing import List
+from datetime import datetime
+from domain.models.match import Match
+
+
+class Round:
+    def __init__(self, name:str):
+        self.name = name
+        self.matches: List[Match] = []
+        self.start_datetime: datetime = datetime.now()
+        self.end_datetime: datetime | None = None
+
+    def add_match(self, match: Match):
+        """Add a match to this round."""
+        self.matches.append(match)
+
+    def start(self):
+        """Mark the round as started (actualize start time)."""
+        self.start_datetime = datetime.now()
+
+    def end(self):
+        """Mark the round as finished and set time."""
+        self.end_datetime = datetime.now()
+
+    def is_finished(self) -> bool:
+        """Return True if the round is finished."""
+        return self.end_datetime is not None
+
+    def to_dict(self) -> dict:
+        """Convert the round instance into a dictionary."""
+        return {
+            "name": self.name,
+            "matches": [
+                match.data for match in self.matches
+            ],
+            "start_datetime": self.start_datetime.isoformat(),
+            "end_datetime" : self.end_datetime.isoformat() if self.end_datetime else None
+        }
+
+    @classmethod
+    def from_dict(cls, round_data: dict):
+        """Create a Round instance from a dictionary (e.g. loaded from JSON)."""
+        round_instance = cls(round_data["name"])
+        round_instance.start_datetime = datetime.fromisoformat(round_data["start_datetime"])
+        end_datetime = round_data.get("end_datetime")
+        round_instance.end_datetime = datetime.fromisoformat(end_datetime) if end_datetime else None
+
+        for match_data in round_data.get("matches", []):
+            round_instance.matches.append(match_data)
+
+        return round_instance
