@@ -2,6 +2,7 @@
 from __future__ import annotations
 from typing import List, Optional
 from domain.models.player import Player
+from domain.models.round import Round
 
 
 class Tournament:
@@ -12,8 +13,8 @@ class Tournament:
             start_date: str,
             end_date: str,
             number_of_rounds: int = 4,
-            current_round_number: int = 0,
-            rounds: Optional[List] = None, #TODO: fill with Round instances later
+            current_round_number: int = 1,
+            rounds: Optional[List[Round]] = None,
             players: Optional[List[Player]] = None,
             description: Optional[str] = None
     ):
@@ -73,7 +74,7 @@ class Tournament:
             end_date=tournament_data["end_date"],
             number_of_rounds=tournament_data.get("number_of_rounds", 4),
             description=tournament_data.get("description"),
-            current_round_number=tournament_data.get("current_round_number", 0),
+            current_round_number=tournament_data.get("current_round_number", 1),
             rounds=tournament_data.get("rounds", []),
             players=tournament_data.get("players", [])
         )
