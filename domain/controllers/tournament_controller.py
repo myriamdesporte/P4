@@ -2,7 +2,7 @@
 from domain.models.tournament import Tournament
 from domain.ports.player_repository import IPlayerRepository
 from domain.ports.tournament_repository import ITournamentRepository
-from infra.utils.tournament_utils import load_tournament_players_from_ids
+from infra.utils.tournament_utils import tournament_with_loaded_players
 
 
 class TournamentController:
@@ -55,15 +55,16 @@ class TournamentController:
 
     def list_tournaments(self):
         """
-        Retrieve all tournaments from the repository.
+        Retrieve all tournaments from the repository with loaded players.
 
         Returns:
             List[Tournament]: A list of all saved tournaments.
         """
         tournaments = self.tournament_repository.load_tournaments()
-        for tournament in tournaments:
-            load_tournament_players_from_ids(
+        return [
+            tournament_with_loaded_players(
                 tournament,
                 self.player_repository
             )
-        return tournaments
+            for tournament in tournaments
+        ]
