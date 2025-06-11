@@ -5,11 +5,17 @@ from domain.models.match import Match
 
 
 class Round:
-    def __init__(self, name:str):
+    def __init__(
+        self,
+        name: str,
+        matches: List[Match] | None = None,
+        start_datetime: datetime | None = None,
+        end_datetime: datetime | None = None
+    ):
         self.name = name
-        self.matches: List[Match] = []
-        self.start_datetime: datetime = datetime.now()
-        self.end_datetime: datetime | None = None
+        self.matches: List[Match] = matches if matches else []
+        self.start_datetime: datetime = start_datetime or datetime.now()
+        self.end_datetime: datetime | None = end_datetime
 
     def add_match(self, match: Match):
         """Add a match to this round."""
