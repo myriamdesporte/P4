@@ -3,9 +3,13 @@ from rich.table import Table
 from rich.panel import Panel
 
 from domain.controllers.player_controller import PlayerController
+from domain.controllers.round_controller import RoundController
 from domain.controllers.tournament_controller import TournamentController
+from domain.models.match import Match
 from infra.repositories.json_player_repository import JSONPlayerRepository
+from infra.repositories.json_round_repository import JSONRoundRepository
 from infra.repositories.json_tournament_repository import JSONTournamentRepository
+from infra.utils.tournament_utils import create_pairs_for_next_round
 
 
 class TournamentView:
@@ -13,12 +17,16 @@ class TournamentView:
         """
         Initialize the view with a TournamentController instance and Rich Console
         """
-        self.controller = TournamentController(
+        self.tournament_controller = TournamentController(
             tournament_repository=JSONTournamentRepository(),
             player_repository=JSONPlayerRepository()
         )
         self.player_controller = PlayerController(
             repository=JSONPlayerRepository()
+        )
+        self.round_controller = RoundController(
+            round_repository=JSONRoundRepository(),
+            tournament_repository=JSONTournamentRepository()
         )
         self.console = Console(force_terminal=True)
 
@@ -69,7 +77,7 @@ class TournamentView:
         """
         Display all saved tournaments from the controller.
         """
-        tournaments = self.controller.list_tournaments()
+        tournaments = self.tournament_controller.list_tournaments()
         if not tournaments:
             self.console.print("[bold yellow]Aucun tournoi trouvé.[/bold yellow]")
             return
@@ -105,7 +113,7 @@ class TournamentView:
         start_date = input("Date de début (format AAAA-MM-JJ) : ")
         end_date = input("Date de fin (format AAAA-MM-JJ) : ")
         description = input("Description : ")
-        tournament = self.controller.create_tournament(
+        tournament = self.tournament_controller.create_tournament(
             name, location, start_date, end_date, description=description
         )
         self.console.print(f"[bold green]Le tournoi '{tournament.name}' a été créé avec succès.[/bold green]")
@@ -119,7 +127,7 @@ class TournamentView:
         self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
         self.list_tournaments_flow()
         tournament_to_be_played_id = input("Entrez un ID de tournoi:")
-        tournaments = self.controller.list_tournaments()
+        tournaments = self.tournament_controller.list_tournaments()
         for tournament in tournaments:
             if tournament.tournament_id == tournament_to_be_played_id:
                 if tournament.status == "Terminé":
@@ -128,7 +136,7 @@ class TournamentView:
                 print(f"\nCe tournoi est {tournament.status}")
 
         player_to_add_id = input("Entrez l'identifiant du joueur à ajouter au tournoi:")
-        player_to_add = self.controller.player_repository.get_by_id(player_to_add_id)
+        player_to_add = self.tournament_controller.player_repository.get_by_id(player_to_add_id)
 
         if player_to_add is None:
             self.console.print("\n[bold blue]Entrez les informations "
@@ -143,22 +151,50 @@ class TournamentView:
                 birth_date=birth_date,
                 national_chess_id=player_to_add_id
             )
-            player_to_add = self.controller.player_repository.get_by_id(player_to_add_id)
+            player_to_add = self.tournament_controller.player_repository.get_by_id(player_to_add_id)
 
         print(f"\nConfirmez-vous l'ajout du joueur {str(player_to_add)} au tournoi?")
         answer = input("O/n")
         if answer == "O":
-            tournament_to_be_played = self.controller.tournament_repository.get_by_id(tournament_to_be_played_id)
+            tournament_to_be_played = self.tournament_controller.tournament_repository.get_by_id(tournament_to_be_played_id)
             players = tournament_to_be_played.players
             players.append(player_to_add)
 
-            self.controller.update_tournament(
+            self.tournament_controller.update_tournament(
                 tournament_to_be_played_id,
                 players=players
             )
 
     def start_tournament_flow(self):
-        print("Démarrer un tournoi")
+        self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
+        self.list_tournaments_flow()
+        tournament_to_be_played_id = input("Entrez un ID de tournoi:")
+        tournaments = self.tournament_controller.list_tournaments()
+        for tournament in tournaments:
+            if tournament.tournament_id == tournament_to_be_played_id:
+                if tournament.status != "Non démarré":
+                    print("\nCe tournoi est déjà commencé ou terminé")
+                    return
+                print(f"\nDémarrage du tournoi...")
+                self.tournament_controller.update_tournament(tournament_to_be_played_id, status="En cours")
+
+                # Générer les paires du premier round
+                pairs = create_pairs_for_next_round(tournament)
+
+                # Créer les objets Match à partir des paires
+                matches = [Match(p1,p2) for p1, p2 in pairs]
+
+                # Créer le premier round et l'ajouter au dépot de rounds
+                first_round = self.round_controller.create_round_in_tournament(
+                    tournament_id=tournament_to_be_played_id,
+                    matches=matches
+                )
+
+                # Ajouter ce round au tournoi et enregistrer
+                rounds = tournament.rounds
+                rounds.append(first_round)
+                self.tournament_controller.update_tournament(tournament_id=tournament_to_be_played_id,
+                                                             rounds=rounds)
 
     def input_results_flow(self):
         print("Saisir des résultats d'un round")

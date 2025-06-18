@@ -40,6 +40,7 @@ class RoundController:
             matches=matches,
             round_id=round_id
         )
+        r.start()
         rounds.append(r)
         self.round_repository.save_rounds(rounds)
         return r
