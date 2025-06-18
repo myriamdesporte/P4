@@ -1,4 +1,7 @@
 """Define the tournament controller."""
+from typing import Optional, List
+from domain.models.player import Player
+from domain.models.round import Round
 from domain.models.tournament import Tournament
 from domain.ports.player_repository import IPlayerRepository
 from domain.ports.tournament_repository import ITournamentRepository
@@ -26,29 +29,23 @@ class TournamentController:
             number_of_rounds: int = 4,
             description: str = ""
     ) -> Tournament:
-        """
-        Create a new tournament, add to the list, and save all tournaments.
+        # Charger tous les tournois
+        tournaments = self.tournament_repository.load_tournaments()
 
-        Args:
-            name (str): Tournament name.
-            location (str): Tournament location.
-            start_date (str): Tournament start date.
-            end_date (str): Tournament end date.
-            number_of_rounds (int): Total number of rounds (default: 4).
-            description (str): Optional description of the tournament.
+        # Créé le nouvel id de tournoi
+        new_id_number = len(tournaments) + 1
+        new_id = f"T{new_id_number:03d}"
 
-        Returns:
-            Tournament: The newly created Tournament instance.
-        """
+        # Créer le tournoi avec ce nouvel ID
         tournament = Tournament(
             name=name,
             location=location,
             start_date=start_date,
             end_date=end_date,
             number_of_rounds=number_of_rounds,
-            description=description
+            description=description,
+            tournament_id=new_id,
         )
-        tournaments = self.tournament_repository.load_tournaments()
         tournaments.append(tournament)
         self.tournament_repository.save_tournaments(tournaments)
         return tournament
@@ -68,3 +65,43 @@ class TournamentController:
             )
             for tournament in tournaments
         ]
+
+    def update_tournament(self,
+                          tournament_id: str,
+                          name: str = None,
+                          location: str = None,
+                          start_date: str = None,
+                          end_date: str = None,
+                          number_of_rounds: int = 4,
+                          current_round_number: int = 1,
+                          rounds: Optional[List[Round]] = None,
+                          players: Optional[List[Player]] = None,
+                          description: Optional[str] = None,
+                          status: str = "Non démarré",
+                          ) -> bool:
+        """Update an existing tournament's information."""
+        return self.tournament_repository.update_tournament_by_id(
+            tournament_id=tournament_id,
+            name=name,
+            location=location,
+            start_date=start_date,
+            end_date=end_date,
+            number_of_rounds=number_of_rounds,
+            current_round_number=current_round_number,
+            rounds=rounds,
+            players=players,
+            description=description,
+            status=status
+        )
+
+    def get_tournament_by_id_with_loaded_players(
+            self,
+            tournament_id: str
+    ) -> Optional[Tournament]:
+        tournament = self.tournament_repository.get_by_id(tournament_id)
+        if tournament is not None:
+            return tournament_with_loaded_players(
+                tournament,
+                self.player_repository
+            )
+        return None

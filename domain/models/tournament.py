@@ -14,9 +14,12 @@ class Tournament:
             end_date: str,
             number_of_rounds: int = 4,
             current_round_number: int = 1,
+            status: str = "Non démarré",
             rounds: Optional[List[Round]] = None,
             players: Optional[List[Player]] = None,
-            description: Optional[str] = None
+            description: Optional[str] = None,
+            tournament_id: Optional[str] = None,
+
     ):
         self.name = name
         self.location = location
@@ -24,9 +27,11 @@ class Tournament:
         self.end_date = end_date
         self.number_of_rounds = number_of_rounds
         self.current_round_number = current_round_number
+        self.status = status
         self.rounds = rounds if rounds is not None else []
         self.players = players if players is not None else []
         self.description = description
+        self.tournament_id = tournament_id
 
     def __str__(self) -> str:
         """
@@ -51,9 +56,14 @@ class Tournament:
             "end_date": self.end_date,
             "number_of_rounds": self.number_of_rounds,
             "current_round_number": self.current_round_number,
+            "status": self.status,
             "rounds": self.rounds,
-            "players": [player.national_chess_id for player in self.players],
-            "description": self.description
+            "players": [
+                player.national_chess_id if isinstance(player, Player) else player
+                for player in self.players
+            ],
+            "description": self.description,
+            "tournament_id": self.tournament_id
         }
 
     @classmethod
@@ -73,8 +83,10 @@ class Tournament:
             start_date=tournament_data["start_date"],
             end_date=tournament_data["end_date"],
             number_of_rounds=tournament_data.get("number_of_rounds", 4),
-            description=tournament_data.get("description"),
             current_round_number=tournament_data.get("current_round_number", 1),
+            status=tournament_data.get("status", "Non démarré"),
             rounds=tournament_data.get("rounds", []),
-            players=tournament_data.get("players", [])
+            players=tournament_data.get("players", []),
+            description=tournament_data.get("description"),
+            tournament_id=tournament_data.get("tournament_id")
         )

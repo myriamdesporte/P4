@@ -31,6 +31,7 @@ def tournament_with_loaded_players(
         description=tournament.description,
     )
 
+
 def have_played_before(
         player1: Player,
         player2: Player,
@@ -46,6 +47,7 @@ def have_played_before(
             if {p1.national_chess_id, p2.national_chess_id} == {player1.national_chess_id, player2.national_chess_id}:
                 return True
     return False
+
 
 def create_pairs_for_next_round(
         tournament: Tournament
