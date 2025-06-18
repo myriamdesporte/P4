@@ -1,5 +1,5 @@
 """Define a round in a chess tournament."""
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 from domain.models.match import Match
 
@@ -10,12 +10,14 @@ class Round:
         name: str,
         matches: List[Match] | None = None,
         start_datetime: datetime | None = None,
-        end_datetime: datetime | None = None
+        end_datetime: datetime | None = None,
+        round_id: Optional[str] = None,
     ):
         self.name = name
         self.matches: List[Match] = matches if matches else []
         self.start_datetime: datetime = start_datetime or datetime.now()
         self.end_datetime: datetime | None = end_datetime
+        self.round_id = round_id
 
     def add_match(self, match: Match):
         """Add a match to this round."""
@@ -41,7 +43,8 @@ class Round:
                 match.data for match in self.matches
             ],
             "start_datetime": self.start_datetime.isoformat(),
-            "end_datetime" : self.end_datetime.isoformat() if self.end_datetime else None
+            "end_datetime" : self.end_datetime.isoformat() if self.end_datetime else None,
+            "round_id": self.round_id
         }
 
     @classmethod
@@ -51,6 +54,7 @@ class Round:
         round_instance.start_datetime = datetime.fromisoformat(round_data["start_datetime"])
         end_datetime = round_data.get("end_datetime")
         round_instance.end_datetime = datetime.fromisoformat(end_datetime) if end_datetime else None
+        round_instance.round_id = round_data.get("round_id")
 
         for match_data in round_data.get("matches", []):
             round_instance.matches.append(match_data)
