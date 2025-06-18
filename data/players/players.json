@@ -10,5 +10,11 @@
     "first_name": "Alice",
     "birth_date": "1998-05-28",
     "national_chess_id": "CD67890"
+  },
+  {
+    "last_name": "Carlsen",
+    "first_name": "Magnus",
+    "birth_date": "1990-11-30",
+    "national_chess_id": "EF12345"
   }
 ]

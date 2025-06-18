@@ -110,9 +110,52 @@ class TournamentView:
         )
         self.console.print(f"[bold green]Le tournoi '{tournament.name}' a été créé avec succès.[/bold green]")
 
-
     def add_player_to_tournament_flow(self):
-        print("Ajouter un joueur à un tournoi")
+        """
+        Add player to a tournament.
+        If the player is not registered in the list of players, he is added
+        to the player repository and then added to the tournament.
+        """
+        self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
+        self.list_tournaments_flow()
+        tournament_to_be_played_id = input("Entrez un ID de tournoi:")
+        tournaments = self.controller.list_tournaments()
+        for tournament in tournaments:
+            if tournament.tournament_id == tournament_to_be_played_id:
+                if tournament.status == "Terminé":
+                    print("\nCe tournoi est terminé")
+                    return
+                print(f"\nCe tournoi est {tournament.status}")
+
+        player_to_add_id = input("Entrez l'identifiant du joueur à ajouter au tournoi:")
+        player_to_add = self.controller.player_repository.get_by_id(player_to_add_id)
+
+        if player_to_add is None:
+            self.console.print("\n[bold blue]Entrez les informations "
+                               "du joueur:[/bold blue]")
+            last_name = input("Nom de famille: ")
+            first_name = input("Prénom: ")
+            birth_date = input("Date de naissance (format AAAA-MM-JJ): ")
+
+            self.player_controller.create_player(
+                last_name=last_name,
+                first_name=first_name,
+                birth_date=birth_date,
+                national_chess_id=player_to_add_id
+            )
+            player_to_add = self.controller.player_repository.get_by_id(player_to_add_id)
+
+        print(f"\nConfirmez-vous l'ajout du joueur {str(player_to_add)} au tournoi?")
+        answer = input("O/n")
+        if answer == "O":
+            tournament_to_be_played = self.controller.tournament_repository.get_by_id(tournament_to_be_played_id)
+            players = tournament_to_be_played.players
+            players.append(player_to_add)
+
+            self.controller.update_tournament(
+                tournament_to_be_played_id,
+                players=players
+            )
 
     def start_tournament_flow(self):
         print("Démarrer un tournoi")

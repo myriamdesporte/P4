@@ -8,7 +8,10 @@
     "current_round_number": 1,
     "status": "Non démarré",
     "rounds": [],
-    "players": [],
+    "players": [
+      "AB12345",
+      "EF12345"
+    ],
     "description": "Tournoi national",
     "tournament_id": "T001"
   }
