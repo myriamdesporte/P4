@@ -66,10 +66,50 @@ class TournamentView:
                                    "Veuillez réessayer.[/bold red]")
 
     def list_tournaments_flow(self):
-        print("Afficher la liste des tournois")
+        """
+        Display all saved tournaments from the controller.
+        """
+        tournaments = self.controller.list_tournaments()
+        if not tournaments:
+            self.console.print("[bold yellow]Aucun tournoi trouvé.[/bold yellow]")
+            return
+        table = Table(title="Liste des tournois",
+                      show_header=True,
+                      header_style="bold magenta")
+        table.add_column("Nom", style="bold blue")
+        table.add_column("Lieu", style="cyan")
+        table.add_column("Date début", style="white", justify="center")
+        table.add_column("Date fin", style="white", justify="center")
+        table.add_column("Description", style="dim")
+        table.add_column("ID", style="bold blue")
+        table.add_column("Status", style="bold blue")
+        for tournament in tournaments:
+            table.add_row(
+                tournament.name,
+                tournament.location,
+                tournament.start_date,
+                tournament.end_date,
+                tournament.description,
+                tournament.tournament_id,
+                tournament.status
+            )
+        self.console.print(table)
 
     def add_tournament_flow(self):
-        print("Créer un nouveau tournoi")
+        """
+        Prompt the user to enter information for a new tournament.
+        """
+        self.console.print("\n[bold blue]Entrez les informations du tournoi :[/bold blue]")
+        name = input("Nom du tournoi : ")
+        location = input("Lieu : ")
+        start_date = input("Date de début (format AAAA-MM-JJ) : ")
+        end_date = input("Date de fin (format AAAA-MM-JJ) : ")
+        description = input("Description : ")
+        tournament = self.controller.create_tournament(
+            name, location, start_date, end_date, description=description
+        )
+        self.console.print(f"[bold green]Le tournoi '{tournament.name}' a été créé avec succès.[/bold green]")
+
 
     def add_player_to_tournament_flow(self):
         print("Ajouter un joueur à un tournoi")
