@@ -57,11 +57,8 @@ class Tournament:
             "number_of_rounds": self.number_of_rounds,
             "current_round_number": self.current_round_number,
             "status": self.status,
-            "rounds": self.rounds,
-            "players": [
-                player.national_chess_id if isinstance(player, Player) else player
-                for player in self.players
-            ],
+            "rounds": [round_.to_dict() for round_ in self.rounds],
+            "players": [p.national_chess_id if isinstance(p, Player) else p for p in self.players],
             "description": self.description,
             "tournament_id": self.tournament_id
         }
@@ -85,7 +82,7 @@ class Tournament:
             number_of_rounds=tournament_data.get("number_of_rounds", 4),
             current_round_number=tournament_data.get("current_round_number", 1),
             status=tournament_data.get("status", "Non démarré"),
-            rounds=tournament_data.get("rounds", []),
+            rounds=[Round.from_dict(round_) for round_ in tournament_data.get("rounds", [])],
             players=tournament_data.get("players", []),
             description=tournament_data.get("description"),
             tournament_id=tournament_data.get("tournament_id")

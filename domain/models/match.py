@@ -13,6 +13,9 @@ class Match:
     ):
         self.data = ([player1, player1_score], [player2, player2_score])
 
+    def __str__(self):
+        return f"{self.data[0][0]}({self.data[0][1]}) - {self.data[1][0]}({self.data[1][1]})"
+
     def get_players(self):
         """Return the two players of a match."""
         return self.data[0][0], self.data[1][0]
@@ -28,8 +31,10 @@ class Match:
     def to_dict(self) -> dict:
         """Convert a Match instance to dictionary."""
         return{
-            "player1_id": self.data[0][0].national_chess_id,
-            "player2_id": self.data[1][0].national_chess_id,
+            "player1_id": self.data[0][0].national_chess_id
+            if isinstance(self.data[0][0], Player) else self.data[0][0],
+                "player2_id": self.data[1][0].national_chess_id
+            if isinstance(self.data[1][0], Player) else self.data[1][0],
             "player1_score": self.data[0][1],
             "player2_score": self.data[1][1],
         }

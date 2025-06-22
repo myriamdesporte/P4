@@ -10,9 +10,70 @@
     "rounds": [],
     "players": [
       "AB12345",
-      "EF12345"
+      "EF12345",
+      "AB67890",
+      "CD67890"
     ],
     "description": "Tournoi national",
     "tournament_id": "T001"
+  },
+  {
+    "name": "Tournoi d'échecs",
+    "location": "Nice",
+    "start_date": "2025-06-23",
+    "end_date": "2025-06-28",
+    "number_of_rounds": 4,
+    "current_round_number": 1,
+    "status": "Non démarré",
+    "rounds": [
+      {
+        "name": "Round1",
+        "matches": [
+          {
+            "player1_id": "EF12345",
+            "player2_id": "AB12345",
+            "player1_score": 0.0,
+            "player2_score": 0.0
+          },
+          {
+            "player1_id": "CD67890",
+            "player2_id": "AB67890",
+            "player1_score": 0.0,
+            "player2_score": 0.0
+          }
+        ],
+        "start_datetime": null,
+        "end_datetime": null,
+        "round_id": null
+      },
+      {
+        "name": "Round2",
+        "matches": [
+          {
+            "player1_id": "EF12345",
+            "player2_id": "CD67890",
+            "player1_score": 0.0,
+            "player2_score": 0.0
+          },
+          {
+            "player1_id": "AB12345",
+            "player2_id": "AB67890",
+            "player1_score": 0.0,
+            "player2_score": 0.0
+          }
+        ],
+        "start_datetime": null,
+        "end_datetime": null,
+        "round_id": null
+      }
+    ],
+    "players": [
+      "EF12345",
+      "AB12345",
+      "CD67890",
+      "AB67890"
+    ],
+    "description": null,
+    "tournament_id": "T002"
   }
 ]

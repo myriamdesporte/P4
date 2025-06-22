@@ -24,9 +24,7 @@ class Player:
         self.national_chess_id = national_chess_id
 
     def __str__(self) -> str:
-        return (f"{self.first_name} {self.last_name} "
-                f"({self.national_chess_id}) - "
-                f"Né(e) le {self.birth_date}")
+        return f"{self.first_name} {self.last_name}"
 
     def to_dict(self):
         """

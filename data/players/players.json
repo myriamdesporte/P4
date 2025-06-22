@@ -16,5 +16,11 @@
     "first_name": "Magnus",
     "birth_date": "1990-11-30",
     "national_chess_id": "EF12345"
+  },
+  {
+    "last_name": "Kasparov",
+    "first_name": "Garry",
+    "birth_date": "1963-04-13",
+    "national_chess_id": "AB67890"
   }
 ]
