@@ -42,12 +42,15 @@ def have_played_before(
 ) -> bool:
     """
     Check whether two players have already played against each other in
-    this tournament.
+    this tournament, based on their national chess id.
     """
+    id1 = player1.national_chess_id
+    id2 = player2.national_chess_id
+
     for round_instance in tournament.rounds:
         for match in round_instance.matches:
-            p1, p2 = match.get_players()
-            if {p1.national_chess_id, p2.national_chess_id} == {player1.national_chess_id, player2.national_chess_id}:
+            p1_id, p2_id = match.get_players()
+            if {p1_id, p2_id} == {id1, id2}:
                 return True
     return False
 
