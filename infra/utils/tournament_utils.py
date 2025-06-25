@@ -56,15 +56,19 @@ def have_played_before(
 
 
 def create_pairs_for_next_round(
-        tournament: Tournament
+        tournament: Tournament,
+        player_repository: IPlayerRepository
 ) -> List[Tuple[Player, Player]]:
     """
     Creates pairs for the next round of the tournament.
     Returns the list of pairs (Player1, Player2).
     """
 
-    # Get all players in the tournament
-    players: List[Player] = tournament.players.copy()
+    # Ensure all players are full Player objects
+    players: List[Player] = [
+        p if isinstance(p, Player) else player_repository.get_by_id(p)
+        for p in tournament.players
+    ]
 
     # Sort players by descending score
     if tournament.current_round_number == 1:
@@ -72,7 +76,7 @@ def create_pairs_for_next_round(
         shuffle(players)
     else:
         # Other rounds: sort players by descending score
-        players.sort(key=lambda p: p.score, reverse=True)
+        players.sort(key=lambda p: tournament.scores[p.national_chess_id], reverse=True)
 
     pairs: List[Tuple[Player, Player]] = []
     paired: set[str] = set()  # Track already paired player IDs
