@@ -78,7 +78,7 @@ class TournamentController:
                           players: Optional[List[Player]] = None,
                           scores: Optional[Dict[str, float]] = None,
                           description: Optional[str] = None,
-                          status: str = "Non démarré",
+                          status: str = None,
                           ) -> bool:
         """Update an existing tournament's information."""
         return self.tournament_repository.update_tournament_by_id(

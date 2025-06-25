@@ -1,7 +1,6 @@
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
-
 from domain.controllers.player_controller import PlayerController
 from domain.controllers.round_controller import RoundController
 from domain.controllers.tournament_controller import TournamentController
@@ -180,26 +179,30 @@ class TournamentView:
                 if tournament.status != "Non démarré":
                     print("\nCe tournoi est déjà commencé ou terminé")
                     return
+
+                if len(tournament.players)%2 != 0:
+                    print("\nLe nombre de jours est impair. Veuillez ajouter un joueur.")
+                    return
+
+                pairs = create_pairs_for_next_round(
+                    tournament=tournament,
+                    player_repository=self.tournament_controller.player_repository
+                )
+
+                matches = [Match(p1,p2) for p1, p2 in pairs]
+
+                first_round = self.round_controller.create_round(
+                    tournament_id=tournament_to_be_played_id,
+                    matches=matches
+                )
+
+                rounds = tournament.rounds
+                rounds.append(first_round)
+                self.tournament_controller.update_tournament(tournament_id=tournament_to_be_played_id,
+                                                             rounds=rounds, status="En cours")
                 print(f"\nDémarrage du tournoi...")
-                self.tournament_controller.update_tournament(tournament_to_be_played_id, status="En cours")
-
-                # Générer les paires du premier round
-                #pairs = create_pairs_for_next_round(tournament)
-
-                # Créer les objets Match à partir des paires
-                #matches = [Match(p1,p2) for p1, p2 in pairs]
-
-                # Créer le premier round et l'ajouter au dépot de rounds
-                #first_round = self.round_controller.create_round_in_tournament(
-                #    tournament_id=tournament_to_be_played_id,
-                #    matches=matches
-                #)
-
-                # Ajouter ce round au tournoi et enregistrer
-                #rounds = tournament.rounds
-                #rounds.append(first_round)
-                #self.tournament_controller.update_tournament(tournament_id=tournament_to_be_played_id,
-                #                                             rounds=rounds)
+                for match in first_round.matches:
+                    print(f"{match.data[0][0]} contre {match.data[1][0]} ")
 
     def input_results_flow(self):
         print("Saisir des résultats d'un round")
