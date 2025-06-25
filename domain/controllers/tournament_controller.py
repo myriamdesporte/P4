@@ -96,6 +96,12 @@ class TournamentController:
             status=status
         )
 
+    def get_by_id(self, tournament_id: str) -> Optional[Tournament]:
+        tournament = self.tournament_repository.get_by_id(tournament_id)
+        if tournament is not None:
+            return tournament
+        return None
+
     def get_tournament_by_id_with_loaded_players(
             self,
             tournament_id: str

@@ -126,13 +126,11 @@ class TournamentView:
         self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
         self.list_tournaments_flow()
         tournament_to_be_played_id = input("Entrez un ID de tournoi:")
-        tournaments = self.tournament_controller.list_tournaments()
-        for tournament in tournaments:
-            if tournament.tournament_id == tournament_to_be_played_id:
-                if tournament.status == "Terminé":
-                    print("\nCe tournoi est terminé")
-                    return
-                print(f"\nCe tournoi est {tournament.status}")
+        tournament = self.tournament_controller.get_by_id(tournament_to_be_played_id)
+        if tournament.status == "Terminé":
+            print("\nCe tournoi est terminé")
+            return
+        print(f"\nCe tournoi est {tournament.status}")
 
         player_to_add_id = input("Entrez l'identifiant du joueur à ajouter au tournoi:")
         player_to_add = self.tournament_controller.player_repository.get_by_id(player_to_add_id)
@@ -173,36 +171,35 @@ class TournamentView:
         self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
         self.list_tournaments_flow()
         tournament_to_be_played_id = input("Entrez un ID de tournoi:")
-        tournaments = self.tournament_controller.list_tournaments()
-        for tournament in tournaments:
-            if tournament.tournament_id == tournament_to_be_played_id:
-                if tournament.status != "Non démarré":
-                    print("\nCe tournoi est déjà commencé ou terminé")
-                    return
+        tournament = self.tournament_controller.get_by_id(tournament_to_be_played_id)
 
-                if len(tournament.players)%2 != 0:
-                    print("\nLe nombre de jours est impair. Veuillez ajouter un joueur.")
-                    return
+        if tournament.status != "Non démarré":
+            print("\nCe tournoi est déjà commencé ou terminé")
+            return
 
-                pairs = create_pairs_for_next_round(
-                    tournament=tournament,
-                    player_repository=self.tournament_controller.player_repository
-                )
+        if len(tournament.players)%2 != 0:
+            print("\nLe nombre de jours est impair. Veuillez ajouter un joueur.")
+            return
 
-                matches = [Match(p1,p2) for p1, p2 in pairs]
+        pairs = create_pairs_for_next_round(
+            tournament=tournament,
+            player_repository=self.tournament_controller.player_repository
+        )
 
-                first_round = self.round_controller.create_round(
-                    tournament_id=tournament_to_be_played_id,
-                    matches=matches
-                )
+        matches = [Match(p1,p2) for p1, p2 in pairs]
 
-                rounds = tournament.rounds
-                rounds.append(first_round)
-                self.tournament_controller.update_tournament(tournament_id=tournament_to_be_played_id,
+        first_round = self.round_controller.create_round(
+            tournament_id=tournament_to_be_played_id,
+            matches=matches
+        )
+
+        rounds = tournament.rounds
+        rounds.append(first_round)
+        self.tournament_controller.update_tournament(tournament_id=tournament_to_be_played_id,
                                                              rounds=rounds, status="En cours")
-                print(f"\nDémarrage du tournoi...")
-                for match in first_round.matches:
-                    print(f"{match.data[0][0]} contre {match.data[1][0]} ")
+        print(f"\nDémarrage du tournoi...")
+        for match in first_round.matches:
+            print(f"{match.data[0][0]} contre {match.data[1][0]} ")
 
     def input_results_flow(self):
         print("Saisir des résultats d'un round")
