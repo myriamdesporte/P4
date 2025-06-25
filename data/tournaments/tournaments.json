@@ -14,6 +14,12 @@
       "AB67890",
       "CD67890"
     ],
+    "scores": {
+      "AB12345": 0.0,
+      "EF12345": 0.0,
+      "AB67890": 0.0,
+      "CD67890": 0.0
+    },
     "description": "Tournoi national",
     "tournament_id": "T001"
   },
@@ -73,6 +79,12 @@
       "CD67890",
       "AB67890"
     ],
+    "scores": {
+      "EF12345": 0.0,
+      "AB12345": 0.0,
+      "CD67890": 0.0,
+      "AB67890": 0.0
+    },
     "description": null,
     "tournament_id": "T002"
   }

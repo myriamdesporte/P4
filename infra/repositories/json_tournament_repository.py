@@ -2,7 +2,7 @@
 
 import json
 import os
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from domain.models.player import Player
 from domain.models.round import Round
@@ -54,6 +54,7 @@ class JSONTournamentRepository(ITournamentRepository):
             current_round_number: int = 1,
             rounds: Optional[List[Round]] = None,
             players: Optional[List[Player]] = None,
+            scores: Optional[Dict[str, float]] = None,
             description: Optional[str] = None,
             status: str = "Non démarré"
     ) -> bool:
@@ -76,6 +77,8 @@ class JSONTournamentRepository(ITournamentRepository):
                     tournament.rounds = rounds
                 if players:
                     tournament.players = players
+                if scores:
+                    tournament.scores = scores
                 if description:
                     tournament.description = description
                 if status:

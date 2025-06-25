@@ -160,9 +160,14 @@ class TournamentView:
             players = tournament_to_be_played.players
             players.append(player_to_add)
 
+            scores = tournament_to_be_played.scores
+            if player_to_add.national_chess_id not in scores:
+                scores[player_to_add.national_chess_id] = 0.0
+
             self.tournament_controller.update_tournament(
                 tournament_to_be_played_id,
-                players=players
+                players=players,
+                scores=scores
             )
 
     def start_tournament_flow(self):
@@ -179,22 +184,22 @@ class TournamentView:
                 self.tournament_controller.update_tournament(tournament_to_be_played_id, status="En cours")
 
                 # Générer les paires du premier round
-                pairs = create_pairs_for_next_round(tournament)
+                #pairs = create_pairs_for_next_round(tournament)
 
                 # Créer les objets Match à partir des paires
-                matches = [Match(p1,p2) for p1, p2 in pairs]
+                #matches = [Match(p1,p2) for p1, p2 in pairs]
 
                 # Créer le premier round et l'ajouter au dépot de rounds
-                first_round = self.round_controller.create_round_in_tournament(
-                    tournament_id=tournament_to_be_played_id,
-                    matches=matches
-                )
+                #first_round = self.round_controller.create_round_in_tournament(
+                #    tournament_id=tournament_to_be_played_id,
+                #    matches=matches
+                #)
 
                 # Ajouter ce round au tournoi et enregistrer
-                rounds = tournament.rounds
-                rounds.append(first_round)
-                self.tournament_controller.update_tournament(tournament_id=tournament_to_be_played_id,
-                                                             rounds=rounds)
+                #rounds = tournament.rounds
+                #rounds.append(first_round)
+                #self.tournament_controller.update_tournament(tournament_id=tournament_to_be_played_id,
+                #                                             rounds=rounds)
 
     def input_results_flow(self):
         print("Saisir des résultats d'un round")

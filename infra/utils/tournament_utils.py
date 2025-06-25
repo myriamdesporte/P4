@@ -26,8 +26,10 @@ def tournament_with_loaded_players(
         end_date=tournament.end_date,
         number_of_rounds=tournament.number_of_rounds,
         current_round_number=tournament.current_round_number,
+        status=tournament.status,
         rounds=tournament.rounds,
         players=loaded_players,
+        scores=tournament.scores,
         description=tournament.description,
         tournament_id=tournament.tournament_id
     )

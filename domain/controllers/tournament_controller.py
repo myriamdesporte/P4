@@ -1,5 +1,5 @@
 """Define the tournament controller."""
-from typing import Optional, List
+from typing import Optional, List, Dict
 from domain.models.player import Player
 from domain.models.round import Round
 from domain.models.tournament import Tournament
@@ -76,6 +76,7 @@ class TournamentController:
                           current_round_number: int = 1,
                           rounds: Optional[List[Round]] = None,
                           players: Optional[List[Player]] = None,
+                          scores: Optional[Dict[str, float]] = None,
                           description: Optional[str] = None,
                           status: str = "Non démarré",
                           ) -> bool:
@@ -90,6 +91,7 @@ class TournamentController:
             current_round_number=current_round_number,
             rounds=rounds,
             players=players,
+            scores=scores,
             description=description,
             status=status
         )

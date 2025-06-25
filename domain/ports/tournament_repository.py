@@ -1,6 +1,6 @@
 """Port interface for tournament repository."""
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from domain.models.player import Player
 from domain.models.round import Round
@@ -27,6 +27,7 @@ class ITournamentRepository(ABC):
                                 current_round_number: int = 1,
                                 rounds: Optional[List[Round]] = None,
                                 players: Optional[List[Player]] = None,
+                                scores: Optional[Dict[str, float]] = None,
                                 description: Optional[str] = None,
                                 status: str = "Non démarré",
                                 ):

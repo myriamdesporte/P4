@@ -1,6 +1,6 @@
 """Define the tournaments."""
 from __future__ import annotations
-from typing import List, Optional
+from typing import List, Optional, Dict
 from domain.models.player import Player
 from domain.models.round import Round
 
@@ -17,9 +17,9 @@ class Tournament:
             status: str = "Non démarré",
             rounds: Optional[List[Round]] = None,
             players: Optional[List[Player]] = None,
+            scores: Optional[Dict[str, float]] = None,
             description: Optional[str] = None,
             tournament_id: Optional[str] = None,
-
     ):
         self.name = name
         self.location = location
@@ -30,6 +30,14 @@ class Tournament:
         self.status = status
         self.rounds = rounds if rounds is not None else []
         self.players = players if players is not None else []
+        if scores is not None:
+            self.scores = scores
+        else:
+            self.scores = {
+                p.national_chess_id if isinstance(p, Player) else p: 0.0
+                for p in self.players
+            }
+
         self.description = description
         self.tournament_id = tournament_id
 
@@ -58,7 +66,11 @@ class Tournament:
             "current_round_number": self.current_round_number,
             "status": self.status,
             "rounds": [round_.to_dict() for round_ in self.rounds],
-            "players": [p.national_chess_id if isinstance(p, Player) else p for p in self.players],
+            "players": [
+                p.national_chess_id if isinstance(p, Player) else p
+                for p in self.players
+            ],
+            "scores": self.scores,
             "description": self.description,
             "tournament_id": self.tournament_id
         }
@@ -84,6 +96,7 @@ class Tournament:
             status=tournament_data.get("status", "Non démarré"),
             rounds=[Round.from_dict(round_) for round_ in tournament_data.get("rounds", [])],
             players=tournament_data.get("players", []),
+            scores=tournament_data.get("scores"),
             description=tournament_data.get("description"),
             tournament_id=tournament_data.get("tournament_id")
         )
