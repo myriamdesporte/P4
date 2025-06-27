@@ -108,13 +108,20 @@ class TournamentView:
         Prompt the user to enter information for a new tournament.
         """
         self.console.print("\n[bold blue]Entrez les informations du tournoi :[/bold blue]")
-        name = input("Nom du tournoi : ")
-        location = input("Lieu : ")
-        start_date = input("Date de début (format AAAA-MM-JJ) : ")
-        end_date = input("Date de fin (format AAAA-MM-JJ) : ")
-        description = input("Description : ")
+        name = input("Nom du tournoi : ").strip()
+        location = input("Lieu : ").strip()
+        start_date = input("Date de début (format AAAA-MM-JJ) : ").strip()
+        end_date = input("Date de fin (format AAAA-MM-JJ) : ").strip()
+        nb= input("Nombre de rounds (4 par défaut) : ")
+        number_of_rounds = int(nb) if nb != "" else 4
+        description = input("Description (Facultatif): ")
         tournament = self.tournament_controller.create_tournament(
-            name, location, start_date, end_date, description=description
+            name=name,
+            location=location,
+            start_date=start_date,
+            end_date=end_date,
+            number_of_rounds=number_of_rounds,
+            description=description
         )
         self.console.print(f"[bold green]Le tournoi '{tournament.name}' a été créé avec succès.[/bold green]")
 
@@ -126,47 +133,65 @@ class TournamentView:
         """
         self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
         self.list_tournaments_flow()
-        tournament_to_be_played_id = input("Entrez un ID de tournoi:")
-        tournament = self.tournament_controller.get_by_id(tournament_to_be_played_id)
-        if tournament.status == "Terminé":
-            print("\nCe tournoi est terminé")
+
+        tournament_id = input("Entrez l'ID du tournoi:")
+        tournament = self.tournament_controller.get_by_id(tournament_id)
+
+        if not tournament:
+            self.console.print("[bold red]Tournoi introuvable. Veuillez d'abord créer le tournoi.[/bold red]")
             return
-        print(f"\nCe tournoi est {tournament.status}")
 
-        player_to_add_id = input("Entrez l'identifiant du joueur à ajouter au tournoi:")
-        player_to_add = self.tournament_controller.player_repository.get_by_id(player_to_add_id)
+        if tournament.status == "Terminé":
+            self.console.print("[bold yellow]Ce tournoi est terminé. Impossible d'y ajouter un joueur.[/bold yellow]")
+            return
 
-        if player_to_add is None:
-            self.console.print("\n[bold blue]Entrez les informations "
-                               "du joueur:[/bold blue]")
-            last_name = input("Nom de famille: ")
-            first_name = input("Prénom: ")
-            birth_date = input("Date de naissance (format AAAA-MM-JJ): ")
+        self.console.print(f"Statut actuel : [green]{tournament.status}[/green]")
 
-            self.player_controller.create_player(
-                last_name=last_name,
-                first_name=first_name,
-                birth_date=birth_date,
-                national_chess_id=player_to_add_id
-            )
-            player_to_add = self.tournament_controller.player_repository.get_by_id(player_to_add_id)
+        while True:
+            player_id = input("Entrez l'identifiant du joueur à ajouter au tournoi:")
+            player = self.tournament_controller.player_repository.get_by_id(player_id)
 
-        print(f"\nConfirmez-vous l'ajout du joueur {str(player_to_add)} au tournoi?")
-        answer = input("O/n")
-        if answer == "O":
-            tournament_to_be_played = self.tournament_controller.tournament_repository.get_by_id(tournament_to_be_played_id)
-            players = tournament_to_be_played.players
-            players.append(player_to_add)
+            if player is None:
+                self.console.print("[bold blue]Joueur non trouvé. "
+                                   "Création d'un nouveau joueur :[/bold blue]")
+                last_name = input("Nom de famille: ").strip()
+                first_name = input("Prénom: ").strip()
+                birth_date = input("Date de naissance (format AAAA-MM-JJ): ").strip()
 
-            scores = tournament_to_be_played.scores
-            if player_to_add.national_chess_id not in scores:
-                scores[player_to_add.national_chess_id] = 0.0
+                self.player_controller.create_player(
+                    last_name=last_name,
+                    first_name=first_name,
+                    birth_date=birth_date,
+                    national_chess_id=player_id
+                )
+                player= self.tournament_controller.player_repository.get_by_id(player_id)
 
-            self.tournament_controller.update_tournament(
-                tournament_to_be_played_id,
-                players=players,
-                scores=scores
-            )
+            self.console.print(f"\nConfirmez-vous l'ajout du joueur {str(player)} au tournoi?")
+            confirmation = input("O/n").strip().lower()
+            if confirmation in ["", "o", "oui"]:
+                tournament = self.tournament_controller.tournament_repository.get_by_id(
+                    tournament_id)
+                players = tournament.players
+                if player in players:
+                    self.console.print("[yellow]Ce joueur est déjà inscrit à  ce tournoi.[/yellow")
+                else:
+                    players.append(player)
+
+                    scores = tournament.scores.copy()
+                    if player.national_chess_id not in scores:
+                        scores[player.national_chess_id] = 0.0
+
+                        self.tournament_controller.update_tournament(
+                            tournament_id,
+                            players=players,
+                            scores=scores
+                        )
+
+                self.console.print(f"[green]Joueur {player} ajouté avec succès.[/green]")
+
+            add_another = input("Voulez-vous ajouter un autre joueur à ce tournoi? (O/n): ").strip().lower()
+            if add_another not in ["", "o", "oui"]:
+                break
 
     def start_tournament_flow(self):
         self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
