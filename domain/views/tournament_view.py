@@ -9,6 +9,7 @@ from infra.repositories.json_player_repository import JSONPlayerRepository
 from infra.repositories.json_tournament_repository import JSONTournamentRepository
 from infra.utils.match_utils import match_with_loaded_players, input_result
 from infra.utils.tournament_utils import create_pairs_for_next_round
+from test import repository
 
 
 class TournamentView:
@@ -314,4 +315,40 @@ class TournamentView:
                 print(f"{match.data[0][0]} contre {match.data[1][0]}")
 
     def show_tournament_details_flow(self):
-        print("Afficher les infos d'un tournoi")
+
+        self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
+        self.list_tournaments_flow()
+        tournament_id = input("Entrez un ID de tournoi: ")
+        tournament = self.tournament_controller.get_by_id(tournament_id)
+
+        self.console.print(f"\n[cyan]{tournament.name} à {tournament.location} - "
+                           f"{tournament.status}\n")
+
+        self.console.print(f"\n[bold]Joueurs du tournoi:[/bold]")
+        for player_id in tournament.players:
+            player = self.tournament_controller.player_repository.get_by_id(player_id)
+            total_score = tournament.scores.get(player_id, 0)
+            self.console.print(f"- {str(player)} : {total_score} points")
+
+        self.console.print(f"\n[bold]Rounds du tournoi:[/bold]")
+
+        for chess_round in tournament.rounds:
+            self.console.print(f"\n[underline]{chess_round.name}[/underline]")
+
+            if not chess_round.matches:
+                self.console.print("Aucun match pour ce round.")
+                continue
+
+            for match in chess_round.matches:
+                match_data = match.to_dict()
+                player1_id = match_data["player1_id"]
+                player2_id = match_data["player2_id"]
+                player1_score = match_data["player1_score"]
+                player2_score = match_data["player2_score"]
+
+                player1 = self.tournament_controller.player_repository.get_by_id(player1_id)
+                player2 = self.tournament_controller.player_repository.get_by_id(player2_id)
+
+                self.console.print(
+                    f"{str(player1)} ({player1_score}) vs {str(player2)} ({player2_score})"
+                )
