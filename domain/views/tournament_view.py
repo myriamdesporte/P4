@@ -166,7 +166,7 @@ class TournamentView:
                 )
                 player= self.tournament_controller.player_repository.get_by_id(player_id)
 
-            self.console.print(f"\nConfirmez-vous l'ajout du joueur {str(player)} au tournoi?")
+            self.console.print(f"\nConfirmez-vous l'ajout du joueur [cyan]{player}[/cyan] au tournoi ?")
             confirmation = input("O/n").strip().lower()
             if confirmation in ["", "o", "oui"]:
                 tournament = self.tournament_controller.tournament_repository.get_by_id(
@@ -196,15 +196,23 @@ class TournamentView:
     def start_tournament_flow(self):
         self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
         self.list_tournaments_flow()
-        tournament_to_be_played_id = input("Entrez un ID de tournoi:")
-        tournament = self.tournament_controller.get_by_id(tournament_to_be_played_id)
+        tournament_id = input("Entrez un ID de tournoi:")
+        tournament = self.tournament_controller.get_by_id(tournament_id)
 
-        if tournament.status != "Non démarré":
-            print("\nCe tournoi est déjà commencé ou terminé")
+        if not tournament:
+            self.console.print("[bold red]Tournoi introuvable.[/bold red]")
             return
 
-        if len(tournament.players)%2 != 0:
-            print("\nLe nombre de jours est impair. Veuillez ajouter un joueur.")
+        if tournament.status != "Non démarré":
+            self.console.print("\n[bold yellow]Ce tournoi est déjà commencé ou terminé[/bold yellow]")
+            return
+
+        if len(tournament.players) == 0:
+            self.console.print("\n[bold yellow]Veuillez ajouter des joueurs au tournoi.[/bold yellow]")
+            return
+        elif len(tournament.players)%2 != 0:
+            self.console.print("\n[bold yellow]Le nombre de jours est impair. "
+                               "Veuillez ajouter un joueur au tournoi.[/bold yellow]")
             return
 
         pairs = create_pairs_for_next_round(
@@ -215,17 +223,24 @@ class TournamentView:
         matches = [Match(p1,p2) for p1, p2 in pairs]
 
         first_round = self.round_controller.create_round(
-            tournament_id=tournament_to_be_played_id,
+            tournament_id=tournament_id,
             matches=matches
         )
 
         rounds = tournament.rounds
         rounds.append(first_round)
-        self.tournament_controller.update_tournament(tournament_id=tournament_to_be_played_id,
-                                                             rounds=rounds, status="En cours")
-        print(f"\nDémarrage du tournoi...")
+        self.tournament_controller.update_tournament(
+            tournament_id=tournament_id,
+            rounds=rounds,
+            status="En cours"
+        )
+        self.console.print(f"\n[bold green]Démarrage du tournoi {tournament.name}...[/bold green]\n")
+        self.console.print(f"{first_round.name}")
         for match in first_round.matches:
-            print(f"{match.data[0][0]} contre {match.data[1][0]} ")
+            player1 = match.data[0][0]
+            player2 = match.data[1][0]
+            self.console.print(f"• {player1.first_name} {player1.last_name} contre "
+                               f"{player2.first_name} {player2.last_name}")
 
     def input_results_flow(self):
         self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
