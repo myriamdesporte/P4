@@ -8,6 +8,7 @@ from domain.models.match import Match
 from infra.repositories.json_player_repository import JSONPlayerRepository
 from infra.repositories.json_round_repository import JSONRoundRepository
 from infra.repositories.json_tournament_repository import JSONTournamentRepository
+from infra.utils.match_utils import match_with_loaded_players, input_result
 from infra.utils.tournament_utils import create_pairs_for_next_round
 
 
@@ -202,7 +203,77 @@ class TournamentView:
             print(f"{match.data[0][0]} contre {match.data[1][0]} ")
 
     def input_results_flow(self):
-        print("Saisir des résultats d'un round")
+        self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
+        self.list_tournaments_flow()
+        tournament_to_be_played_id = input("Entrez un ID de tournoi:")
+        tournament = self.tournament_controller.get_by_id(tournament_to_be_played_id)
+
+        if tournament.status != "En cours":
+            print(f"Ce tournoi est non démarré ou déjà terminé.")
+            return
+
+        current_round_index = tournament.current_round_number - 1
+        if current_round_index >= len(tournament.rounds):
+            return
+
+        current_round = tournament.rounds[current_round_index]
+        self.console.print(f"\n[bold]Saisie des résultats pour le round {current_round.name}[/bold]")
+
+        for i, raw_match in enumerate(current_round.matches, 1):
+            match = match_with_loaded_players(
+                match= raw_match,
+                player_repository=self.tournament_controller.player_repository
+            )
+            self.console.print(f"\nMatch {i} : {match.data[0][0]} contre {match.data[1][0]}")
+
+            input_result(match=match)
+
+            current_round.matches[i - 1] = match
+
+            player1_id = match.data[0][0].national_chess_id
+            player2_id = match.data[1][0].national_chess_id
+            score1, score2 = match.get_scores()
+
+            tournament.scores[player1_id] += score1
+            tournament.scores[player2_id] += score2
+
+        current_round.end()
+
+
+        if tournament.current_round_number >= tournament.number_of_rounds:
+            self.tournament_controller.update_tournament(
+                tournament_id=tournament_to_be_played_id,
+                scores=tournament.scores,
+                status="Terminé"
+            )
+            self.console.print("\n[bold green]Le tournoi est terminé![/bold green]")
+
+        else:
+            tournament.current_round_number += 1
+
+            pairs = create_pairs_for_next_round(
+                tournament=tournament,
+                player_repository=self.tournament_controller.player_repository
+            )
+
+            new_matches = [Match(p1, p2) for p1, p2 in pairs]
+            new_round = self.round_controller.create_round(
+                tournament_id=tournament_to_be_played_id,
+                matches=new_matches
+            )
+            rounds = tournament.rounds
+            rounds.append(new_round)
+
+            self.tournament_controller.update_tournament(
+                tournament_id=tournament_to_be_played_id,
+                current_round_number=tournament.current_round_number,
+                rounds=rounds,
+                scores=tournament.scores,
+            )
+
+            self.console.print("\n[bold green]Nouveau round généré :[/bold green]")
+            for match in new_round.matches:
+                print(f"{match.data[0][0]} contre {match.data[1][0]}")
 
     def show_tournament_details_flow(self):
         print("Afficher les infos d'un tournoi")

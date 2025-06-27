@@ -1,5 +1,7 @@
 """Define the tournament controller."""
 from typing import Optional, List, Dict
+
+from domain.models.match import Match
 from domain.models.player import Player
 from domain.models.round import Round
 from domain.models.tournament import Tournament
@@ -72,8 +74,8 @@ class TournamentController:
                           location: str = None,
                           start_date: str = None,
                           end_date: str = None,
-                          number_of_rounds: int = 4,
-                          current_round_number: int = 1,
+                          number_of_rounds: int = None,
+                          current_round_number: int = None,
                           rounds: Optional[List[Round]] = None,
                           players: Optional[List[Player]] = None,
                           scores: Optional[Dict[str, float]] = None,
