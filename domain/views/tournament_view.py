@@ -6,7 +6,6 @@ from domain.controllers.round_controller import RoundController
 from domain.controllers.tournament_controller import TournamentController
 from domain.models.match import Match
 from infra.repositories.json_player_repository import JSONPlayerRepository
-from infra.repositories.json_round_repository import JSONRoundRepository
 from infra.repositories.json_tournament_repository import JSONTournamentRepository
 from infra.utils.match_utils import match_with_loaded_players, input_result
 from infra.utils.tournament_utils import create_pairs_for_next_round
@@ -25,7 +24,6 @@ class TournamentView:
             repository=JSONPlayerRepository()
         )
         self.round_controller = RoundController(
-            round_repository=JSONRoundRepository(),
             tournament_repository=JSONTournamentRepository()
         )
         self.console = Console(force_terminal=True)
@@ -234,8 +232,8 @@ class TournamentView:
             rounds=rounds,
             status="En cours"
         )
-        self.console.print(f"\n[bold green]Démarrage du tournoi {tournament.name}...[/bold green]\n")
-        self.console.print(f"{first_round.name}")
+        self.console.print("\n[bold green]Démarrage du tournoi {tournament}...[/bold green]")
+        self.console.print(f"{first_round.name}\n")
         for match in first_round.matches:
             player1 = match.data[0][0]
             player2 = match.data[1][0]
