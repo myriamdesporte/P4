@@ -8,7 +8,10 @@ from domain.ports.player_repository import IPlayerRepository
 
 
 class JSONPlayerRepository(IPlayerRepository):
-    PLAYERS_DATA_FILE = "data/players/players.json"
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    PLAYERS_DATA_FILE = os.path.normpath(os.path.join(
+        BASE_DIR, "..", "..", "data", "players", "players.json"
+    ))
 
     def load_players(self) -> List[Player]:
         """
@@ -21,9 +24,13 @@ class JSONPlayerRepository(IPlayerRepository):
             return []
         with open(self.PLAYERS_DATA_FILE, "r", encoding="utf-8") as file:
             players_data = json.load(file)
-            return [
+            players = [
                 Player.from_dict(player_data) for player_data in players_data
             ]
+
+            players_sorted = sorted(players, key=lambda p: p.last_name.lower())
+
+            return players_sorted
 
     def save_players(self, players: List[Player]) -> None:
         """

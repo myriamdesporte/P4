@@ -3,6 +3,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from domain.views.player_view import PlayerView
+from domain.views.report_view import ReportView
 from domain.views.tournament_view import TournamentView
 
 
@@ -10,6 +11,7 @@ class MainMenuView:
     def __init__(self):
         self.player_view = PlayerView()
         self.tournament_view = TournamentView()
+        self.report_view = ReportView()
         self.console = Console(force_terminal=True)
 
     def display_menu(self):
@@ -23,7 +25,8 @@ class MainMenuView:
 
             table.add_row("1", "Gestionnaire de joueurs")
             table.add_row("2", "Gestionnaire de tournois")
-            table.add_row("3", "Quitter")
+            table.add_row("3", "Rapports")
+            table.add_row("4", "Quitter")
 
             self.console.print(table)
 
@@ -34,6 +37,8 @@ class MainMenuView:
             elif choice == "2":
                 self.tournament_view.display_menu()
             elif choice == "3":
+                self.report_view.display_menu()
+            elif choice == "4":
                 self.console.print("[bold blue]Au revoir ![/bold blue]")
                 break
             else:
