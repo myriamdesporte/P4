@@ -1,3 +1,4 @@
+from random import randint
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
@@ -7,9 +8,8 @@ from domain.controllers.tournament_controller import TournamentController
 from domain.models.match import Match
 from infra.repositories.json_player_repository import JSONPlayerRepository
 from infra.repositories.json_tournament_repository import JSONTournamentRepository
-from infra.utils.match_utils import match_with_loaded_players, input_result
+from infra.utils.match_utils import match_with_loaded_players
 from infra.utils.tournament_utils import create_pairs_for_next_round
-from test import repository
 
 
 class TournamentView:
@@ -265,7 +265,31 @@ class TournamentView:
             )
             self.console.print(f"\nMatch {i} : {match.data[0][0]} contre {match.data[1][0]}")
 
-            input_result(match=match)
+            while True:
+                print(f"1 → Le gagnant est {match.data[0][0]}")
+                print(f"2 → Le gagnant est {match.data[1][0]}")
+                print(f"3 → Match nul")
+                print(f"4 → Choix aléatoire")
+
+                choice = input("Votre choix : ")
+
+                if choice == "4":
+                    choice = str(randint(1, 3))
+
+                if choice == "1":
+                    match.set_scores(1.0, 0.0)
+                    print(match)
+                    break
+                elif choice == "2":
+                    match.set_scores(0.0, 1.0)
+                    print(match)
+                    break
+                elif choice == "3":
+                    match.set_scores(0.5, 0.5)
+                    print(match)
+                    break
+                else:
+                    print("Choix invalide. Réessayez.")
 
             current_round.matches[i - 1] = match
 
@@ -277,7 +301,6 @@ class TournamentView:
             tournament.scores[player2_id] += score2
 
         current_round.end()
-
 
         if tournament.current_round_number >= tournament.number_of_rounds:
             self.tournament_controller.update_tournament(
