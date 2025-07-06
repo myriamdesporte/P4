@@ -2,7 +2,7 @@
     <!DOCTYPE html>
     <html lang="fr">
     <head>
-        <meta charset="UTF-8" />
+        <meta charset="UTF-8">
         <title>Rapport: liste des joueurs</title>
         <style>
             table { border-collapse: collapse; width: 80%; margin: 20px auto; }
@@ -22,35 +22,15 @@
                 </tr>
             </thead>
             <tbody>
-        <tr>
-            <td>Carlsen</td>
-            <td>Magnus</td>
-            <td>1990-11-30</td>
-            <td>EF12345</td>
-        </tr>
-        
-        <tr>
-            <td>Dupont</td>
-            <td>Jean</td>
-            <td>2000-01-01</td>
-            <td>AB12345</td>
-        </tr>
-        
-        <tr>
-            <td>Kasparov</td>
-            <td>Garry</td>
-            <td>1963-04-13</td>
-            <td>AB67890</td>
-        </tr>
-        
-        <tr>
-            <td>Martin</td>
-            <td>Alice</td>
-            <td>1998-05-28</td>
-            <td>CD67890</td>
-        </tr>
-        </tbody>
+                {% for player in players %}
+                <tr>
+                    <td>{{ player.last_name }}</td>
+                    <td>{{ player.first_name }}</td>
+                    <td>{{ player.birth_date }}</td>
+                    <td>{{ player.national_chess_id }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </body>
     </html>
-    

@@ -1,20 +1,42 @@
 """Define the report view."""
 
+import os
+import webbrowser
+from pathlib import Path
+
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 
-from domain.controllers.player_controller import PlayerController
-from infra.reports.players_report_generator import generate_player_report
+from domain.controllers.report_controller import ReportController
 from infra.repositories.json_player_repository import JSONPlayerRepository
+from infra.repositories.json_tournament_repository import JSONTournamentRepository
 
+TEMPLATE_DIR = os.path.normpath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "templates")
+)
+
+PLAYERS_TEMPLATE_NAME = "players_report_template.html"
+
+PLAYERS_REPORT_PATH = os.path.normpath(
+    os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "..",
+        "..",
+        "generated_reports",
+        "players_report.html"
+    )
+)
 
 class ReportView:
     def __init__(self):
         """
-        Initialize the view with a PlayerController instance and Rich Console.
+        Initialize the view with a ReportController instance and Rich Console.
         """
-        self.controller = PlayerController(JSONPlayerRepository())
+        self.controller = ReportController(
+            player_repository=JSONPlayerRepository(),
+            tournament_repository=JSONTournamentRepository()
+        )
         self.console = Console(force_terminal=True)
 
     def display_menu(self):
@@ -51,8 +73,14 @@ class ReportView:
                 self.console.print("[bold red]Choix invalide. Veuillez réessayer.[/bold red]")
 
     def list_players_flow(self):
-        generate_player_report()
-        self.console.print("[bold green]Rapport HTML généré et ouvert dans le navigateur.[/bold green]")
+        player_report_path = self.controller.generate_player_report(
+            template_dir=TEMPLATE_DIR,
+            template_name=PLAYERS_TEMPLATE_NAME,
+            output_path=PLAYERS_REPORT_PATH
+        )
+        report_name = Path(player_report_path).name
+        webbrowser.open(f"file://{player_report_path}")
+        self.console.print(f"\n[bold green] 📄Rapport {report_name} généré et ouvert dans le navigateur.[/bold green]")
 
     def list_tournaments_flow(self):
         self.console.print("[bold green]Rapport HTML: liste de tous les tournois.[/bold green]")

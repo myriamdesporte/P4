@@ -176,5 +176,8 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# Rapports générés
+/generated_reports/
+
 # Fichier de test
 test.py
