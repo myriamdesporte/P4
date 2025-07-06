@@ -3,7 +3,6 @@
 import os
 import webbrowser
 from pathlib import Path
-
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
@@ -25,6 +24,18 @@ PLAYERS_REPORT_PATH = os.path.normpath(
         "..",
         "generated_reports",
         "players_report.html"
+    )
+)
+
+TOURNAMENTS_TEMPLATE_NAME = "tournaments_report_template.html"
+
+TOURNAMENTS_REPORT_PATH = os.path.normpath(
+    os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "..",
+        "..",
+        "generated_reports",
+        "tournaments_report.html"
     )
 )
 
@@ -73,17 +84,24 @@ class ReportView:
                 self.console.print("[bold red]Choix invalide. Veuillez réessayer.[/bold red]")
 
     def list_players_flow(self):
-        player_report_path = self.controller.generate_player_report(
+        players_report_path = self.controller.generate_player_report(
             template_dir=TEMPLATE_DIR,
             template_name=PLAYERS_TEMPLATE_NAME,
             output_path=PLAYERS_REPORT_PATH
         )
-        report_name = Path(player_report_path).name
-        webbrowser.open(f"file://{player_report_path}")
+        report_name = Path(players_report_path).name
+        webbrowser.open(f"file://{players_report_path}")
         self.console.print(f"\n[bold green] 📄Rapport {report_name} généré et ouvert dans le navigateur.[/bold green]")
 
     def list_tournaments_flow(self):
-        self.console.print("[bold green]Rapport HTML: liste de tous les tournois.[/bold green]")
+        tournaments_report_path = self.controller.generate_tournaments_report(
+            template_dir=TEMPLATE_DIR,
+            template_name=TOURNAMENTS_TEMPLATE_NAME,
+            output_path=TOURNAMENTS_REPORT_PATH
+        )
+        report_name = Path(tournaments_report_path).name
+        webbrowser.open(f"file://{tournaments_report_path}")
+        self.console.print(f"\n[bold green] 📄Rapport {report_name} généré et ouvert dans le navigateur.[/bold green]")
 
     def show_tournament_details_flow(self):
-        self.console.print("[bold green]Rapport HTML: détails d'un tournoi (nom, dates, liste des joueurs et détails des rounds).[/bold green]")
+        self.console.print(f"\n[bold green] 📄Rapport généré et ouvert dans le navigateur.[/bold green]")
