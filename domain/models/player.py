@@ -15,7 +15,7 @@ class Player:
         Args:
             last_name (str): Player's last name.
             first_name (str): Player's first name.
-            birth_date (str): Player's date of birth in 'YYYY-MM-DD' format.
+            birth_date (str): Player's date of birth in 'DD-MM-YYYY' format.
             national_chess_id (str): Unique national chess ID (ex: 'AB12345').
         """
         self.last_name = last_name

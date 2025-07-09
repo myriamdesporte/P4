@@ -109,8 +109,8 @@ class TournamentView:
         self.console.print("\n[bold blue]Entrez les informations du tournoi :[/bold blue]")
         name = input("Nom du tournoi : ").strip()
         location = input("Lieu : ").strip()
-        start_date = input("Date de début (format AAAA-MM-JJ) : ").strip()
-        end_date = input("Date de fin (format AAAA-MM-JJ) : ").strip()
+        start_date = input("Date de début (format JJ-MM-AAAA) : ").strip()
+        end_date = input("Date de fin (format JJ-MM-AAAA) : ").strip()
         nb= input("Nombre de rounds (4 par défaut) : ")
         number_of_rounds = int(nb) if nb != "" else 4
         description = input("Description (Facultatif): ")
@@ -155,7 +155,7 @@ class TournamentView:
                                    "Création d'un nouveau joueur :[/bold blue]")
                 last_name = input("Nom de famille: ").strip()
                 first_name = input("Prénom: ").strip()
-                birth_date = input("Date de naissance (format AAAA-MM-JJ): ").strip()
+                birth_date = input("Date de naissance (format JJ-MM-AAAA): ").strip()
 
                 self.player_controller.create_player(
                     last_name=last_name,
@@ -301,11 +301,14 @@ class TournamentView:
             tournament.scores[player2_id] += score2
 
         current_round.end()
+        self.console.print(f"\n[bold green] Le {current_round.name} "
+                           f"est maintenant terminé.[bold green]")
 
         if tournament.current_round_number >= tournament.number_of_rounds:
             self.tournament_controller.update_tournament(
                 tournament_id=tournament_to_be_played_id,
                 scores=tournament.scores,
+                rounds=tournament.rounds,
                 status="Terminé"
             )
             self.console.print("\n[bold green]Le tournoi est terminé![/bold green]")
@@ -323,13 +326,12 @@ class TournamentView:
                 tournament_id=tournament_to_be_played_id,
                 matches=new_matches
             )
-            rounds = tournament.rounds
-            rounds.append(new_round)
+            tournament.rounds.append(new_round)
 
             self.tournament_controller.update_tournament(
                 tournament_id=tournament_to_be_played_id,
                 current_round_number=tournament.current_round_number,
-                rounds=rounds,
+                rounds=tournament.rounds,
                 scores=tournament.scores,
             )
 

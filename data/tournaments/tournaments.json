@@ -1,98 +1,9 @@
 [
   {
-    "name": "Chess Open",
+    "name": "Olympiades d'échecs",
     "location": "Paris",
-    "start_date": "2025-06-18",
-    "end_date": "2025-06-25",
-    "number_of_rounds": 4,
-    "current_round_number": 1,
-    "status": "Non démarré",
-    "rounds": [],
-    "players": [
-      "AB12345",
-      "EF12345",
-      "AB67890",
-      "CD67890"
-    ],
-    "scores": {
-      "AB12345": 0.0,
-      "EF12345": 0.0,
-      "AB67890": 0.0,
-      "CD67890": 0.0
-    },
-    "description": "Tournoi national",
-    "tournament_id": "T001"
-  },
-  {
-    "name": "Tournoi d'échecs",
-    "location": "Nice",
-    "start_date": "2025-06-23",
-    "end_date": "2025-06-28",
-    "number_of_rounds": 4,
-    "current_round_number": 1,
-    "status": "Non démarré",
-    "rounds": [
-      {
-        "name": "Round1",
-        "matches": [
-          {
-            "player1_id": "EF12345",
-            "player2_id": "AB12345",
-            "player1_score": 0.0,
-            "player2_score": 0.0
-          },
-          {
-            "player1_id": "CD67890",
-            "player2_id": "AB67890",
-            "player1_score": 0.0,
-            "player2_score": 0.0
-          }
-        ],
-        "start_datetime": null,
-        "end_datetime": null,
-        "round_id": null
-      },
-      {
-        "name": "Round2",
-        "matches": [
-          {
-            "player1_id": "EF12345",
-            "player2_id": "CD67890",
-            "player1_score": 0.0,
-            "player2_score": 0.0
-          },
-          {
-            "player1_id": "AB12345",
-            "player2_id": "AB67890",
-            "player1_score": 0.0,
-            "player2_score": 0.0
-          }
-        ],
-        "start_datetime": null,
-        "end_datetime": null,
-        "round_id": null
-      }
-    ],
-    "players": [
-      "EF12345",
-      "AB12345",
-      "CD67890",
-      "AB67890"
-    ],
-    "scores": {
-      "EF12345": 0.0,
-      "AB12345": 0.0,
-      "CD67890": 0.0,
-      "AB67890": 0.0
-    },
-    "description": null,
-    "tournament_id": "T002"
-  },
-  {
-    "name": "Essai",
-    "location": "Lyon",
-    "start_date": "",
-    "end_date": "",
+    "start_date": "09-07-2025",
+    "end_date": "20-07-2025",
     "number_of_rounds": 4,
     "current_round_number": 4,
     "status": "Terminé",
@@ -101,96 +12,152 @@
         "name": "Round1",
         "matches": [
           {
-            "player1_id": "AB67890",
-            "player2_id": "EF12345",
+            "player1_id": "EF67890",
+            "player2_id": "AB12345",
+            "player1_score": 0.0,
+            "player2_score": 1.0
+          },
+          {
+            "player1_id": "CD12345",
+            "player2_id": "AB67890",
+            "player1_score": 0.0,
+            "player2_score": 1.0
+          },
+          {
+            "player1_id": "CD67890",
+            "player2_id": "GH12345",
             "player1_score": 0.5,
             "player2_score": 0.5
           },
           {
-            "player1_id": "AB12345",
-            "player2_id": "CD67890",
-            "player1_score": 0.0,
-            "player2_score": 1.0
+            "player1_id": "EF12345",
+            "player2_id": "GH67890",
+            "player1_score": 0.5,
+            "player2_score": 0.5
           }
         ],
-        "start_datetime": "2025-06-27T15:37:24.441626",
-        "end_datetime": "2025-06-27T15:37:52.087172",
-        "round_id": "T003Round1"
+        "start_datetime": "2025-07-09T15:26:18.801562",
+        "end_datetime": "2025-07-09T15:26:36.945143",
+        "round_id": "T001Round1"
       },
       {
         "name": "Round2",
         "matches": [
           {
-            "player1_id": "CD67890",
-            "player2_id": "EF12345",
-            "player1_score": 0.0,
-            "player2_score": 1.0
-          },
-          {
-            "player1_id": "AB67890",
-            "player2_id": "AB12345",
+            "player1_id": "AB12345",
+            "player2_id": "AB67890",
             "player1_score": 1.0,
             "player2_score": 0.0
+          },
+          {
+            "player1_id": "EF12345",
+            "player2_id": "GH12345",
+            "player1_score": 0.5,
+            "player2_score": 0.5
+          },
+          {
+            "player1_id": "CD67890",
+            "player2_id": "GH67890",
+            "player1_score": 1.0,
+            "player2_score": 0.0
+          },
+          {
+            "player1_id": "CD12345",
+            "player2_id": "EF67890",
+            "player1_score": 0.5,
+            "player2_score": 0.5
           }
         ],
-        "start_datetime": "2025-06-27T15:37:52.087894",
-        "end_datetime": "2025-06-27T15:38:07.070518",
-        "round_id": "T003Round2"
+        "start_datetime": "2025-07-09T15:26:36.947883",
+        "end_datetime": "2025-07-09T15:26:51.961088",
+        "round_id": "T001Round2"
       },
       {
         "name": "Round3",
         "matches": [
           {
-            "player1_id": "EF12345",
+            "player1_id": "AB12345",
             "player2_id": "CD67890",
+            "player1_score": 0.0,
+            "player2_score": 1.0
+          },
+          {
+            "player1_id": "EF12345",
+            "player2_id": "GH12345",
             "player1_score": 1.0,
             "player2_score": 0.0
           },
           {
             "player1_id": "AB67890",
-            "player2_id": "AB12345",
+            "player2_id": "EF67890",
             "player1_score": 1.0,
             "player2_score": 0.0
+          },
+          {
+            "player1_id": "CD12345",
+            "player2_id": "GH67890",
+            "player1_score": 0.0,
+            "player2_score": 1.0
           }
         ],
-        "start_datetime": "2025-06-27T15:38:07.071404",
-        "end_datetime": "2025-06-27T15:38:33.018877",
-        "round_id": "T003Round3"
+        "start_datetime": "2025-07-09T15:26:51.963289",
+        "end_datetime": "2025-07-09T15:27:00.378400",
+        "round_id": "T001Round3"
       },
       {
         "name": "Round4",
         "matches": [
           {
-            "player1_id": "EF12345",
+            "player1_id": "CD67890",
             "player2_id": "AB12345",
-            "player1_score": 0.0,
+            "player1_score": 1.0,
             "player2_score": 0.0
           },
           {
-            "player1_id": "AB67890",
-            "player2_id": "CD67890",
+            "player1_id": "EF12345",
+            "player2_id": "AB67890",
             "player1_score": 0.0,
-            "player2_score": 0.0
+            "player2_score": 1.0
+          },
+          {
+            "player1_id": "GH67890",
+            "player2_id": "GH12345",
+            "player1_score": 0.0,
+            "player2_score": 1.0
+          },
+          {
+            "player1_id": "CD12345",
+            "player2_id": "EF67890",
+            "player1_score": 0.5,
+            "player2_score": 0.5
           }
         ],
-        "start_datetime": "2025-06-27T15:38:33.020502",
-        "end_datetime": null,
-        "round_id": "T003Round4"
+        "start_datetime": "2025-07-09T15:27:00.380566",
+        "end_datetime": "2025-07-09T15:27:11.758414",
+        "round_id": "T001Round4"
       }
     ],
     "players": [
       "AB12345",
+      "CD12345",
       "EF12345",
+      "GH12345",
+      "AB67890",
       "CD67890",
-      "AB67890"
+      "EF67890",
+      "GH67890"
     ],
     "scores": {
-      "AB12345": 0.0,
-      "EF12345": 3.5,
-      "CD67890": 1.0,
-      "AB67890": 3.5
+      "AB12345": 2.0,
+      "CD12345": 1.0,
+      "EF12345": 2.0,
+      "GH12345": 2.0,
+      "AB67890": 3.0,
+      "CD67890": 3.5,
+      "EF67890": 1.0,
+      "GH67890": 1.5
     },
-    "description": "bla",
-    "tournament_id": "T003"
+    "description": "---",
+    "tournament_id": "T001"
   }
 ]

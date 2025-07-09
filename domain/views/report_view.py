@@ -6,8 +6,8 @@ from pathlib import Path
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
-
 from domain.controllers.report_controller import ReportController
+from domain.views.tournament_view import TournamentView
 from infra.repositories.json_player_repository import JSONPlayerRepository
 from infra.repositories.json_tournament_repository import JSONTournamentRepository
 
@@ -38,6 +38,16 @@ TOURNAMENTS_REPORT_PATH = os.path.normpath(
         "tournaments_report.html"
     )
 )
+TOURNAMENT_DETAILS_TEMPLATE_NAME = "tournament_details_report_template.html"
+TOURNAMENT_DETAILS_REPORT_DIR = os.path.normpath(
+    os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "..",
+        "..",
+        "generated_reports",
+        "tournament_details"
+    )
+)
 
 class ReportView:
     def __init__(self):
@@ -49,6 +59,7 @@ class ReportView:
             tournament_repository=JSONTournamentRepository()
         )
         self.console = Console(force_terminal=True)
+        self.tournament_view = TournamentView()
 
     def display_menu(self):
         """
@@ -104,4 +115,15 @@ class ReportView:
         self.console.print(f"\n[bold green] 📄Rapport {report_name} généré et ouvert dans le navigateur.[/bold green]")
 
     def show_tournament_details_flow(self):
-        self.console.print(f"\n[bold green] 📄Rapport généré et ouvert dans le navigateur.[/bold green]")
+        self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
+        self.tournament_view.list_tournaments_flow()
+        tournament_id = input("Entrez un ID de tournoi: ")
+        tournament_details_report_path = self.controller.generate_tournament_details_report(
+            template_dir=TEMPLATE_DIR,
+            template_name=TOURNAMENT_DETAILS_TEMPLATE_NAME,
+            output_dir=TOURNAMENT_DETAILS_REPORT_DIR,
+            tournament_id=tournament_id,
+        )
+        report_name = Path(tournament_details_report_path).name
+        webbrowser.open(f"file://{tournament_details_report_path}")
+        self.console.print(f"\n[bold green] 📄Rapport {report_name} généré et ouvert dans le navigateur.[/bold green]")

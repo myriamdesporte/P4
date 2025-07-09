@@ -90,7 +90,7 @@ class PlayerView:
                            "du joueur:[/bold blue]")
         last_name = input("Nom de famille: ")
         first_name = input("Prénom: ")
-        birth_date = input("Date de naissance (format AAAA-MM-JJ): ")
+        birth_date = input("Date de naissance (format JJ-MM-AAAA): ")
         national_chess_id = input("Identifiant national d'échecs "
                                   "(ex: AB12345): ")
 
@@ -112,7 +112,7 @@ class PlayerView:
                            "à conserver.[/bold blue]")
         new_last_name = input("Nom de famille: ")
         new_first_name = input("Prénom: ")
-        new_birth_date = input("Date de naissance (AAAA-MM-JJ): ")
+        new_birth_date = input("Date de naissance (JJ-MM-AAAA): ")
 
         success = self.controller.update_player(
             national_id,

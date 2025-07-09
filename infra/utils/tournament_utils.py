@@ -1,9 +1,10 @@
 from random import shuffle
 from typing import List, Tuple
 from domain.models.player import Player
+from domain.models.round import Round
 from domain.models.tournament import Tournament
 from domain.ports.player_repository import IPlayerRepository
-
+from infra.utils.round_utils import round_with_loaded_players
 
 def tournament_with_loaded_players(
         tournament: Tournament,
@@ -18,7 +19,12 @@ def tournament_with_loaded_players(
         player = player_repository.get_by_id(player_id)
         if player:
             loaded_players.append(player)
-
+    loaded_rounds: List[Round] = []
+    for chess_round in tournament.rounds:
+        loaded_rounds. append(round_with_loaded_players(
+            chess_round,
+            player_repository
+        ))
     return Tournament(
         name=tournament.name,
         location=tournament.location,
@@ -27,7 +33,7 @@ def tournament_with_loaded_players(
         number_of_rounds=tournament.number_of_rounds,
         current_round_number=tournament.current_round_number,
         status=tournament.status,
-        rounds=tournament.rounds,
+        rounds=loaded_rounds,
         players=loaded_players,
         scores=tournament.scores,
         description=tournament.description,

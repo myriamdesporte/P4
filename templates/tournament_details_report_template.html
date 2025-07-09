@@ -1,0 +1,107 @@
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>Rapport: liste des tournois</title>
+        <style>
+            table { border-collapse: collapse; width: 80%; margin: 20px auto; }
+            th, td { border: 1px solid #444; padding: 8px; text-align: center; }
+            th { background-color: #a020f0; color: white; }
+        </style>
+    </head>
+   <body>
+    <h1 style="text-align: center;">Détail du tournoi</h1>
+
+    <!-- Main table: Tournament information -->
+    <table>
+        <thead>
+            <tr>
+                <th>Identifiant</th>
+                <th>Nom</th>
+                <th>Lieu</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Statut</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ tournament.tournament_id }}</td>
+                <td>{{ tournament.name }}</td>
+                <td>{{ tournament.location }}</td>
+                <td>{{ tournament.start_date }}</td>
+                <td>{{ tournament.end_date }}</td>
+                <td>{{ tournament.status }}</td>
+                <td>{{ tournament.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- List of players in the tournament -->
+    <h2 style="text-align: center; margin-top: 40px;">Joueurs inscrits</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Date de naissance</th>
+                <th>INE</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in tournament.players %}
+            <tr>
+                <td>{{ player.last_name }}</td>
+                <td>{{ player.first_name }}</td>
+                <td>{{ player.birth_date }}</td>
+                <td>{{ player.national_chess_id }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+  <!-- Rounds and Matches section -->
+  <h2 style="text-align: center; margin-top: 40px;">Rounds et Matchs</h2>
+  {% for round in tournament.rounds %}
+    <table>
+        <colgroup>
+      <col style="width: 40%">
+      <col style="width: 10%">
+      <col style="width: 10%">
+      <col style="width: 40%">
+    </colgroup>
+      <thead>
+      <tr>
+          <th colspan="4">
+              <strong>{{ round.name }}</strong> <br>
+              Début : {{round.start_datetime | format_fr }} -
+              Fin :  {{round.end_datetime | format_fr }}
+          </th>
+      </tr>
+        <tr>
+            <th>Joueur 1</th>
+            <th colspan="2">Score</th>
+            <th>Joueur 2</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for match in round.matches %}
+        <tr>
+          <td>{{ match.data[0][0] }}</td>
+            <td><strong>{{ match.data[0][1] }}</strong></td>
+            <td><strong>{{ match.data[1][1] }}</strong></td>
+          <td>{{ match.data[1][0] }}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="3">Aucun match pour ce round.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p style="text-align: center;">Aucun round programmé.</p>
+  {% endfor %}
+</body>
+</html>
