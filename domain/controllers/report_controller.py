@@ -91,6 +91,9 @@ class ReportController:
         )
         env.filters["format_fr"] = format_french_datetime
         template = env.get_template(template_name)
+
+        tournament.players = sorted(tournament.players, key=lambda p: p.last_name.lower())
+
         rendered_html = template.render(tournament=tournament)
         filename = f"tournament_{tournament_id}_report.html"
         output_path = os.path.normpath(os.path.join(output_dir, filename))
