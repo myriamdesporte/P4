@@ -94,7 +94,20 @@ class ReportController:
 
         tournament.players = sorted(tournament.players, key=lambda p: p.last_name.lower())
 
-        rendered_html = template.render(tournament=tournament)
+        sorted_scores = sorted(
+            tournament.scores.items(),
+            key=lambda item: item[1],
+            reverse=True
+        )
+
+        ranking = []
+        for player_id, score in sorted_scores:
+            player = self.player_repository.get_by_id(player_id)
+            if player:
+                ranking.append((player, score))
+
+        rendered_html = template.render(tournament=tournament, ranking=ranking)
+
         filename = f"tournament_{tournament_id}_report.html"
         output_path = os.path.normpath(os.path.join(output_dir, filename))
         os.makedirs(output_dir, exist_ok=True)

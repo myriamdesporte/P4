@@ -103,5 +103,36 @@
   {% else %}
     <p style="text-align: center;">Aucun round programmé.</p>
   {% endfor %}
+
+
+   <h2 style="text-align: center; margin-top: 40px;">
+    {% if tournament.status != "Terminé" %}
+        Classement provisoire
+    {% else %}
+        Classement final
+    {% endif %}
+</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Position</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for player, score in ranking %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ player.last_name }}</td>
+            <td>{{ player.first_name }}</td>
+            <td>{{ score }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 </body>
 </html>
