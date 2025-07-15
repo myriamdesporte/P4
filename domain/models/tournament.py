@@ -1,6 +1,9 @@
 """Define the tournaments."""
+
 from __future__ import annotations
+
 from typing import List, Optional, Dict
+
 from domain.models.player import Player
 from domain.models.round import Round
 
@@ -21,6 +24,9 @@ class Tournament:
             description: Optional[str] = None,
             tournament_id: Optional[str] = None,
     ):
+        """
+        Initialize a Tournament instance with metadata, list of players, rounds, and scores.
+        """
         self.name = name
         self.location = location
         self.start_date = start_date
@@ -30,25 +36,12 @@ class Tournament:
         self.status = status
         self.rounds = rounds if rounds is not None else []
         self.players = players if players is not None else []
-        if scores is not None:
-            self.scores = scores
-        else:
-            self.scores = {
-                p.national_chess_id if isinstance(p, Player) else p: 0.0
-                for p in self.players
-            }
-
+        self.scores = scores if scores is not None else {
+            p.national_chess_id if isinstance(p, Player) else p: 0.0
+            for p in self.players
+        }
         self.description = description
         self.tournament_id = tournament_id
-
-    def __str__(self) -> str:
-        """
-        Return a string representation of the tournament.
-        """
-        return (f"Tournoi: {self.name} à {self.location} "
-                f"du {self.start_date} au {self.end_date} "
-                f"({len(self.players)} joueurs, "
-                f"tour {self.current_round_number}/{self.number_of_rounds})")
 
     def to_dict(self) -> dict:
         """

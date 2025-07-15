@@ -176,8 +176,11 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# Rapports générés
+# Generated reports
 /generated_reports/
 
 # Fichier de test
 test.py
+
+# Flake8 report folder
+/flake8_report/

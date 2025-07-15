@@ -1,4 +1,6 @@
-"""Define the player controller"""
+"""Handle player management operations."""
+
+from typing import List, Optional
 
 from domain.models.player import Player
 from domain.ports.player_repository import IPlayerRepository
@@ -7,7 +9,7 @@ from domain.ports.player_repository import IPlayerRepository
 class PlayerController:
     def __init__(self, repository: IPlayerRepository):
         """
-        Initialize the controller by loading existing players from storage.
+        Initialize the controller with a player repository.
         """
         self.repository = repository
 
@@ -19,7 +21,7 @@ class PlayerController:
             national_chess_id: str
     ) -> Player:
         """
-        Create a new player, add to the list, and save all players
+        Create and save a new player.
 
         Args:
             last_name (str): Player's last name.
@@ -41,30 +43,25 @@ class PlayerController:
         self.repository.save_players(players)
         return player
 
-    def list_players(self):
-        """
-        Retrieve all players from the repository.
-
-        Returns:
-            List[Player]: A list of all registered players.
-        """
+    def list_players(self) -> List[Player]:
+        """Return all players from the repository."""
         return self.repository.load_players()
 
     def update_player(
             self,
             national_chess_id: str,
-            last_name: str = None,
-            first_name: str = None,
-            birth_date: str = None
+            last_name: Optional[str] = None,
+            first_name: Optional[str] = None,
+            birth_date: Optional[str] = None
     ) -> bool:
         """
-        Update an existing player's information.
+        Update a player identified by national_chess_id.
 
         Args:
             national_chess_id (str): ID of the player to update.
-            last_name (str, optional): New last name.
-            first_name (str, optional): New first name.
-            birth_date (str, optional): New date of birth.
+            last_name (str, optional): new last name.
+            first_name (str, optional): new first name.
+            birth_date (str, optional): new date of birth.
 
         Returns:
             bool: True if the player was found and updated, False otherwise.
@@ -78,7 +75,7 @@ class PlayerController:
 
     def delete_player(self, national_chess_id: str) -> bool:
         """
-        Delete a player based on their national chess ID.
+        Delete a player identified by national_chess_id.
 
         Args:
             national_chess_id (str): ID of the player to delete.

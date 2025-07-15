@@ -1,3 +1,5 @@
+"""Match-related utilities for handling player references."""
+
 from domain.models.match import Match
 from domain.ports.player_repository import IPlayerRepository
 
@@ -6,10 +8,7 @@ def match_with_loaded_players(
         match: Match,
         player_repository: IPlayerRepository
 ) -> Match:
-    """
-    Return a new instance of Match with players loaded from their IDs,
-    without modifying the existing instance of Match.
-    """
+    """Return a new Match instance with full Player objects loaded from their IDs."""
     p1, p1_score = match.data[0]
     p2, p2_score = match.data[1]
 

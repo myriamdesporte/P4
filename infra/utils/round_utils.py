@@ -1,3 +1,5 @@
+"""Round-related utilities for handling player references."""
+
 from domain.models.round import Round
 from domain.ports.player_repository import IPlayerRepository
 from infra.utils.match_utils import match_with_loaded_players
@@ -8,8 +10,8 @@ def round_with_loaded_players(
         player_repository: IPlayerRepository
 ) -> Round:
     """
-    Return a new instance of Round with matches containing full Player instances
-    loaded from their IDs, without modifying the existing Round.
+    Return a new Round instance with matches containing full Player objects
+    loaded from their IDs.
     """
     loaded_matches = []
 

@@ -1,4 +1,5 @@
 """Port interface for tournament repository."""
+
 from abc import ABC, abstractmethod
 from typing import List, Optional, Dict
 
@@ -10,27 +11,31 @@ from domain.models.tournament import Tournament
 class ITournamentRepository(ABC):
     @abstractmethod
     def load_tournaments(self) -> List[Tournament]:
+        """Load all tournaments from the data source."""
         pass
 
     @abstractmethod
     def save_tournaments(self, tournaments: List[Tournament]) -> None:
+        """Save the full list of tournaments to the data source."""
         pass
 
     @abstractmethod
-    def update_tournament_by_id(self,
-                                tournament_id: str,
-                                name: str = None,
-                                location: str = None,
-                                start_date: str = None,
-                                end_date: str = None,
-                                number_of_rounds: int = 4,
-                                current_round_number: int = 1,
-                                rounds: Optional[List[Round]] = None,
-                                players: Optional[List[Player]] = None,
-                                scores: Optional[Dict[str, float]] = None,
-                                description: Optional[str] = None,
-                                status: str = "Non démarré",
-                                ):
+    def update_tournament_by_id(
+            self,
+            tournament_id: str,
+            name: Optional[str] = None,
+            location: Optional[str] = None,
+            start_date: Optional[str] = None,
+            end_date: Optional[str] = None,
+            number_of_rounds: Optional[int] = None,
+            current_round_number: Optional[int] = None,
+            rounds: Optional[List[Round]] = None,
+            players: Optional[List[Player]] = None,
+            scores: Optional[Dict[str, float]] = None,
+            description: Optional[str] = None,
+            status: Optional[str] = None
+    ):
+        """Update a tournament with the given ID."""
         pass
 
     @abstractmethod

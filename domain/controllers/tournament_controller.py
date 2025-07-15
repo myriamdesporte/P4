@@ -1,7 +1,7 @@
-"""Define the tournament controller."""
+"""Handle tournament management operations."""
+
 from typing import Optional, List, Dict
 
-from domain.models.match import Match
 from domain.models.player import Player
 from domain.models.round import Round
 from domain.models.tournament import Tournament
@@ -16,9 +16,7 @@ class TournamentController:
             tournament_repository: ITournamentRepository,
             player_repository: IPlayerRepository
     ):
-        """
-        Initialize the controller by setting the repository.
-        """
+        """Initialize the controller with tournament and player repositories."""
         self.tournament_repository = tournament_repository
         self.player_repository = player_repository
 
@@ -31,14 +29,25 @@ class TournamentController:
             number_of_rounds: int = 4,
             description: str = ""
     ) -> Tournament:
-        # Charger tous les tournois
+        """
+        Create and save a new tournament.
+
+        Args:
+            name (str): Tournament name.
+            location (str): Tournament location.
+            start_date (str): Start date, format 'DD-MM-YYYY'.
+            end_date (str): End date, format 'DD-MM-YYYY'.
+            number_of_rounds (int): Total rounds (default 4).
+            description (str): Optional description.
+
+        Returns:
+            Tournament: The created tournament instance.
+        """
         tournaments = self.tournament_repository.load_tournaments()
 
-        # Créé le nouvel id de tournoi
         new_id_number = len(tournaments) + 1
         new_id = f"T{new_id_number:03d}"
 
-        # Créer le tournoi avec ce nouvel ID
         tournament = Tournament(
             name=name,
             location=location,
@@ -52,13 +61,8 @@ class TournamentController:
         self.tournament_repository.save_tournaments(tournaments)
         return tournament
 
-    def list_tournaments(self):
-        """
-        Retrieve all tournaments from the repository with loaded players.
-
-        Returns:
-            List[Tournament]: A list of all saved tournaments.
-        """
+    def list_tournaments(self) -> List[Tournament]:
+        """Return all tournaments from the repository with players loaded."""
         tournaments = self.tournament_repository.load_tournaments()
         return [
             tournament_with_loaded_players(
@@ -70,19 +74,19 @@ class TournamentController:
 
     def update_tournament(self,
                           tournament_id: str,
-                          name: str = None,
-                          location: str = None,
-                          start_date: str = None,
-                          end_date: str = None,
-                          number_of_rounds: int = None,
-                          current_round_number: int = None,
+                          name: Optional[str] = None,
+                          location: Optional[str] = None,
+                          start_date: Optional[str] = None,
+                          end_date: Optional[str] = None,
+                          number_of_rounds: Optional[int] = None,
+                          current_round_number: Optional[int] = None,
                           rounds: Optional[List[Round]] = None,
                           players: Optional[List[Player]] = None,
                           scores: Optional[Dict[str, float]] = None,
                           description: Optional[str] = None,
-                          status: str = None,
+                          status: Optional[str] = None,
                           ) -> bool:
-        """Update an existing tournament's information."""
+        """Update a tournament identified by its ID."""
         return self.tournament_repository.update_tournament_by_id(
             tournament_id=tournament_id,
             name=name,
@@ -99,19 +103,19 @@ class TournamentController:
         )
 
     def get_by_id(self, tournament_id: str) -> Optional[Tournament]:
-        tournament = self.tournament_repository.get_by_id(tournament_id)
-        if tournament is not None:
-            return tournament
-        return None
+        """Return a tournament by its ID, or None if not found."""
+        return self.tournament_repository.get_by_id(tournament_id)
 
     def get_tournament_by_id_with_loaded_players(
             self,
             tournament_id: str
     ) -> Optional[Tournament]:
+        """Return a tournament with players loaded by its ID, or None if not found."""
         tournament = self.tournament_repository.get_by_id(tournament_id)
-        if tournament is not None:
-            return tournament_with_loaded_players(
-                tournament,
-                self.player_repository
-            )
-        return None
+        if tournament is None:
+            return None
+
+        return tournament_with_loaded_players(
+            tournament=tournament,
+            player_repository=self.player_repository
+        )

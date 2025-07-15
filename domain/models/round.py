@@ -1,6 +1,10 @@
 """Define a round in a chess tournament."""
+
+from __future__ import annotations
+
 from typing import List, Optional
 from datetime import datetime
+
 from domain.models.match import Match
 
 
@@ -13,31 +17,20 @@ class Round:
         end_datetime: Optional[datetime] = None,
         round_id: Optional[str] = None,
     ):
+        """Initialize a Round instance with optional match list and timestamps."""
         self.name = name
         self.matches: List[Match] = matches if matches else []
         self.start_datetime: Optional[datetime] = start_datetime
         self.end_datetime: Optional[datetime] = end_datetime
         self.round_id = round_id
 
-    def __str__(self):
-        matches = [str(match) for match in self.matches]
-        return f"{self.name} avec les matchs {matches}"
-
-    def add_match(self, match: Match):
-        """Add a match to this round."""
-        self.matches.append(match)
-
     def start(self):
-        """Mark the round as started (actualize start time)."""
+        """Set the start time of the round to the current time."""
         self.start_datetime = datetime.now()
 
     def end(self):
-        """Mark the round as finished and set time."""
+        """Set the end time of the round to the current time."""
         self.end_datetime = datetime.now()
-
-    def is_finished(self) -> bool:
-        """Return True if the round is finished."""
-        return self.end_datetime is not None
 
     def to_dict(self) -> dict:
         """Convert the round instance into a dictionary."""
@@ -52,23 +45,19 @@ class Round:
         }
 
     @classmethod
-    def from_dict(cls, round_data: dict):
-        """Create a Round instance from a dictionary (e.g. loaded from JSON)."""
-        round_instance = cls(round_data["name"])
+    def from_dict(cls, round_data: dict) -> Round:
+        matches = [Match.from_dict(m) for m in round_data.get("matches", [])]
 
         start_dt = round_data.get("start_datetime")
-        round_instance.start_datetime = (
-            datetime.fromisoformat(start_dt) if isinstance(start_dt, str) else None
-        )
+        start_datetime = datetime.fromisoformat(start_dt) if isinstance(start_dt, str) else None
 
         end_dt = round_data.get("end_datetime")
-        round_instance.end_datetime = (
-            datetime.fromisoformat(end_dt) if isinstance(end_dt, str) else None
+        end_datetime = datetime.fromisoformat(end_dt) if isinstance(end_dt, str) else None
+
+        return cls(
+            name=round_data["name"],
+            matches=matches,
+            start_datetime=start_datetime,
+            end_datetime=end_datetime,
+            round_id=round_data.get("round_id"),
         )
-
-        round_instance.round_id = round_data.get("round_id")
-
-        for match_data in round_data.get("matches", []):
-            round_instance.matches.append(Match.from_dict(match_data))
-
-        return round_instance

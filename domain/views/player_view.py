@@ -1,8 +1,9 @@
-"""Define the player view."""
+"""Player view managing the user interface for player CRUD operations."""
 
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
+
 from domain.controllers.player_controller import PlayerController
 from infra.repositories.json_player_repository import JSONPlayerRepository
 
@@ -17,7 +18,8 @@ class PlayerView:
 
     def display_menu(self):
         """
-        Display the main menu and route user choices to corresponding actions.
+        Display the player menu and route user choices to corresponding actions.
+        Loop until user chooses to return to the main menu.
         """
         while True:
             self.console.print(Panel.fit("[bold magenta]Tournoi d'échecs - "
@@ -53,9 +55,8 @@ class PlayerView:
                                    "Veuillez réessayer.[/bold red]")
 
     def list_players_flow(self):
-        """
-        Display all saved players from the controller.
-        """
+        """Display a table listing all players."""
+
         players = self.controller.list_players()
         if not players:
             self.console.print("[bold yellow]No players found.[/bold yellow]")
@@ -83,8 +84,7 @@ class PlayerView:
 
     def add_player_flow(self):
         """
-        Prompt the user to enter information for a new player
-        and delegate player creation to the controller.
+        Prompt for new player details and create the player via the controller.
         """
         self.console.print("\n[bold blue]Entrez les informations "
                            "du joueur:[/bold blue]")
@@ -103,7 +103,7 @@ class PlayerView:
 
     def update_player_flow(self):
         """
-        Update the information of a player.
+        Prompt for player ID and new data, then update the player via the controller.
         """
         self.console.print("\n[bold blue]Entrez l'identifiant national "
                            "d'échecs du joueur à mettre à jour: [/bold blue]")
@@ -130,7 +130,7 @@ class PlayerView:
 
     def delete_player_flow(self):
         """
-        Delete a player.
+        Prompt for player ID and delete the player via the controller.
         """
         self.console.print("\n[bold blue]Entrez l'identifiant national "
                            "d'échecs du joueur à supprimer: [/bold blue]")

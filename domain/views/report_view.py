@@ -1,11 +1,13 @@
-"""Define the report view."""
+"""Report view managing the display and generation of tournament reports."""
 
 import os
 import webbrowser
 from pathlib import Path
+
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
+
 from domain.controllers.report_controller import ReportController
 from domain.views.tournament_view import TournamentView
 from infra.repositories.json_player_repository import JSONPlayerRepository
@@ -49,6 +51,7 @@ TOURNAMENT_DETAILS_REPORT_DIR = os.path.normpath(
     )
 )
 
+
 class ReportView:
     def __init__(self):
         """
@@ -64,11 +67,12 @@ class ReportView:
     def display_menu(self):
         """
         Display the main menu and route user choices to corresponding actions.
+        Loop until user chooses to return to the main menu.
         """
         while True:
             self.console.print(Panel.fit("[bold magenta]Tournoi d'échecs - "
                                          "Bienvenue dans le gestionnaire de "
-                                         "joueurs[/bold magenta]"))
+                                         "rapports[/bold magenta]"))
 
             table = Table(box=None)
             table.add_column("Option", justify="center", style="bold")

@@ -1,18 +1,21 @@
+"""Tournament utilities for resolving players and generating pairings."""
+
 from random import shuffle
 from typing import List, Tuple
+
 from domain.models.player import Player
 from domain.models.round import Round
 from domain.models.tournament import Tournament
 from domain.ports.player_repository import IPlayerRepository
 from infra.utils.round_utils import round_with_loaded_players
 
+
 def tournament_with_loaded_players(
         tournament: Tournament,
         player_repository: IPlayerRepository
 ) -> Tournament:
     """
-    Return a new instance of Tournament with players loaded from their IDs,
-    without modifying the existing instance of Tournament.
+    Return a new Tournament instance with players and rounds fully resolved from their IDs.
     """
     loaded_players: List[Player] = []
     for player_id in tournament.players:
@@ -67,7 +70,7 @@ def create_pairs_for_next_round(
 ) -> List[Tuple[Player, Player]]:
     """
     Creates pairs for the next round of the tournament.
-    Returns the list of pairs (Player1, Player2).
+    Returns a list of (Player, Player) tuples.
     """
 
     # Ensure all players are full Player objects
@@ -105,8 +108,10 @@ def create_pairs_for_next_round(
             for opponent in players[i+1:]:
                 if opponent.national_chess_id not in paired:
                     pairs.append((player, opponent))
-                    paired.add(player.national_chess_id)
-                    paired.add(opponent.national_chess_id)
+                    paired.update(
+                        {player.national_chess_id,
+                         opponent.national_chess_id}
+                    )
                     break
 
     return pairs

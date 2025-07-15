@@ -30,6 +30,12 @@
     "national_chess_id": "EF67890"
   },
   {
+    "last_name": "Ushenina",
+    "first_name": "Anna",
+    "birth_date": "30-08-1985",
+    "national_chess_id": "GH67890"
+  },
+  {
     "last_name": "Wenjun",
     "first_name": "Ju",
     "birth_date": "03-01-1991",
@@ -40,11 +46,5 @@
     "first_name": "Tan",
     "birth_date": "29-05-1991",
     "national_chess_id": "CD67890"
-  },
-  {
-    "last_name": "Ushenina",
-    "first_name": "Anna",
-    "birth_date": "30-08-1985",
-    "national_chess_id": "GH67890"
   }
 ]
