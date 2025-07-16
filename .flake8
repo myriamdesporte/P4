@@ -2,4 +2,4 @@
 exclude = env,.git
 max-line-length = 119
 format = html
-htmldir = flake8_report
+htmldir = flake8_rapport

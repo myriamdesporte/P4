@@ -179,8 +179,5 @@ cython_debug/
 # Generated reports
 /generated_reports/
 
-# Fichier de test
-test.py
-
 # Flake8 report folder
-/flake8_report/
+/flake8_rapport/
