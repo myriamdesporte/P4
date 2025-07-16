@@ -1,6 +1,5 @@
 """Report view managing the display and generation of tournament reports."""
 
-import os
 import webbrowser
 from pathlib import Path
 
@@ -10,46 +9,17 @@ from rich.panel import Panel
 
 from domain.controllers.report_controller import ReportController
 from domain.views.tournament_view import TournamentView
+from infra.config import (
+    TEMPLATE_DIR,
+    PLAYERS_TEMPLATE_NAME,
+    PLAYERS_REPORT_PATH,
+    TOURNAMENTS_TEMPLATE_NAME,
+    TOURNAMENTS_REPORT_PATH,
+    TOURNAMENT_DETAILS_TEMPLATE_NAME,
+    TOURNAMENT_DETAILS_REPORT_DIR
+)
 from infra.repositories.json_player_repository import JSONPlayerRepository
 from infra.repositories.json_tournament_repository import JSONTournamentRepository
-
-TEMPLATE_DIR = os.path.normpath(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "templates")
-)
-
-PLAYERS_TEMPLATE_NAME = "players_report_template.html"
-
-PLAYERS_REPORT_PATH = os.path.normpath(
-    os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        "..",
-        "..",
-        "generated_reports",
-        "players_report.html"
-    )
-)
-
-TOURNAMENTS_TEMPLATE_NAME = "tournaments_report_template.html"
-
-TOURNAMENTS_REPORT_PATH = os.path.normpath(
-    os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        "..",
-        "..",
-        "generated_reports",
-        "tournaments_report.html"
-    )
-)
-TOURNAMENT_DETAILS_TEMPLATE_NAME = "tournament_details_report_template.html"
-TOURNAMENT_DETAILS_REPORT_DIR = os.path.normpath(
-    os.path.join(
-        os.path.dirname(os.path.abspath(__file__)),
-        "..",
-        "..",
-        "generated_reports",
-        "tournament_details"
-    )
-)
 
 
 class ReportView:
