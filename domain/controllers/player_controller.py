@@ -84,3 +84,7 @@ class PlayerController:
             bool: True if the player was found and deleted, False otherwise.
         """
         return self.repository.delete_player_by_id(national_chess_id)
+
+    def get_by_id(self, national_chess_id: str) -> Optional[Player]:
+        """Return a player by its ID, or None if not found."""
+        return self.repository.get_by_id(national_chess_id)
