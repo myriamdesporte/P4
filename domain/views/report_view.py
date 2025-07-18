@@ -9,7 +9,7 @@ from rich.panel import Panel
 
 from domain.controllers.report_controller import ReportController
 from domain.views.tournament_view import TournamentView
-from infra.config import (
+from config import (
     TEMPLATE_DIR,
     PLAYERS_TEMPLATE_NAME,
     PLAYERS_REPORT_PATH,
