@@ -1,42 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport: liste des tournois</title>
+    <link href="../templates/style.css" rel="stylesheet">
+</head>
 
-    <!DOCTYPE html>
-    <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <title>Rapport: liste des tournois</title>
-        <style>
-            table { border-collapse: collapse; width: 80%; margin: 20px auto; }
-            th, td { border: 1px solid #444; padding: 8px; text-align: center; }
-            th { background-color: #a020f0; color: white; }
-        </style>
-    </head>
-    <body>
-        <h1 style="text-align: center;">Liste des tournois</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Identifiant</th>
-                    <th>Nom</th>
-                    <th>Lieu</th>
-                    <th>Date de début</th>
-                    <th>Date de fin</th>
-                    <th>Statut</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for tournament in tournaments %}
-                <tr>
-                    <td>{{ tournament.tournament_id }}</td>
-                    <td>{{ tournament.name }}</td>
-                    <td>{{ tournament.location }}</td>
-                    <td>{{ tournament.start_date }}</td>
-                    <td>{{ tournament.end_date }}</td>
-                    <td>{{ tournament.status }}</td>
-                    <td>{{ tournament.description }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </body>
-    </html>
+<body>
+    <div class="logo-container">
+        <img src="../templates/images/chess_tournament.png" alt="Logo du club d’échecs" />
+    </div>
+
+    <div class="club-name">Gestionnaire de Tournois d’Échecs</div>
+    <h1 style="text-align: center;">Liste des tournois</h1>
+    <table>
+        <colgroup>
+            <col style="width: 10%">
+            <col style="width: 20%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 30%">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Identifiant</th>
+                <th>Nom</th>
+                <th>Lieu</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Statut</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tournament in tournaments %}
+            <tr>
+                <td>{{ tournament.tournament_id }}</td>
+                <td>{{ tournament.name }}</td>
+                <td>{{ tournament.location }}</td>
+                <td>{{ tournament.start_date }}</td>
+                <td>{{ tournament.end_date }}</td>
+                <td>{{ tournament.status }}</td>
+                <td>{{ tournament.description }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

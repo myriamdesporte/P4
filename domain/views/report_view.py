@@ -16,7 +16,7 @@ from infra.config import (
     TOURNAMENTS_TEMPLATE_NAME,
     TOURNAMENTS_REPORT_PATH,
     TOURNAMENT_DETAILS_TEMPLATE_NAME,
-    TOURNAMENT_DETAILS_REPORT_DIR
+    GENERATED_REPORTS_DIR
 )
 from infra.repositories.json_player_repository import JSONPlayerRepository
 from infra.repositories.json_tournament_repository import JSONTournamentRepository
@@ -95,7 +95,7 @@ class ReportView:
         tournament_details_report_path = self.controller.generate_tournament_details_report(
             template_dir=TEMPLATE_DIR,
             template_name=TOURNAMENT_DETAILS_TEMPLATE_NAME,
-            output_dir=TOURNAMENT_DETAILS_REPORT_DIR,
+            output_dir=GENERATED_REPORTS_DIR,
             tournament_id=tournament_id,
         )
         report_name = Path(tournament_details_report_path).name

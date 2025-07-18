@@ -1,19 +1,30 @@
-    <!DOCTYPE html>
-    <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <title>Rapport: liste des tournois</title>
-        <style>
-            table { border-collapse: collapse; width: 80%; margin: 20px auto; }
-            th, td { border: 1px solid #444; padding: 8px; text-align: center; }
-            th { background-color: #a020f0; color: white; }
-        </style>
-    </head>
-   <body>
-    <h1 style="text-align: center;">Détail du tournoi</h1>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport: liste des tournois</title>
+    <link href="../templates/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="logo-container">
+        <img src="../templates/images/chess_tournament.png" alt="Logo du club d’échecs" />
+    </div>
+
+    <div class="club-name">Gestionnaire de Tournois d’Échecs</div>
+    <h1 style="text-align: center;">Détails du tournoi</h1>
 
     <!-- Main table: Tournament information -->
     <table>
+        <colgroup>
+            <col style="width: 10%">
+            <col style="width: 20%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 30%">
+        </colgroup>
         <thead>
             <tr>
                 <th>Identifiant</th>
@@ -41,6 +52,12 @@
     <!-- List of players in the tournament -->
     <h2 style="text-align: center; margin-top: 40px;">Joueurs inscrits</h2>
     <table>
+        <colgroup>
+            <col style="width: 30%">
+            <col style="width: 30%">
+            <col style="width: 20%">
+            <col style="width: 20%">
+        </colgroup>
         <thead>
             <tr>
                 <th>Nom</th>
@@ -66,11 +83,11 @@
   {% for round in tournament.rounds %}
     <table>
         <colgroup>
-      <col style="width: 40%">
-      <col style="width: 10%">
-      <col style="width: 10%">
-      <col style="width: 40%">
-    </colgroup>
+            <col style="width: 40%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 40%">
+        </colgroup>
       <thead>
       <tr>
           <th colspan="4">
@@ -100,11 +117,12 @@
         {% endfor %}
       </tbody>
     </table>
+     <div><br></div>
   {% else %}
     <p style="text-align: center;">Aucun round programmé.</p>
   {% endfor %}
 
-
+<!-- Ranking -->
    <h2 style="text-align: center; margin-top: 40px;">
     {% if tournament.status != "Terminé" %}
         Classement provisoire
@@ -114,6 +132,12 @@
 </h2>
 
 <table>
+    <colgroup>
+        <col style="width: 20%">
+        <col style="width: 30%">
+        <col style="width: 30%">
+        <col style="width: 20%">
+    </colgroup>
     <thead>
         <tr>
             <th>Position</th>

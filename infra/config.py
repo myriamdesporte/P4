@@ -8,7 +8,6 @@ BASE_DIR = os.path.normpath(
 
 TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 GENERATED_REPORTS_DIR = os.path.join(BASE_DIR, "generated_reports")
-TOURNAMENT_DETAILS_REPORT_DIR = os.path.join(GENERATED_REPORTS_DIR, "tournament_details")
 
 # HTML Templates
 PLAYERS_TEMPLATE_NAME = "players_report_template.html"
