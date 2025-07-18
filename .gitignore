@@ -176,8 +176,8 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# DS_Store folders
+.DS_Store
+
 # Generated reports
 /generated_reports/
-
-# Flake8 report folder
-/flake8_rapport/
