@@ -69,9 +69,12 @@ sont enregistrés dans le dossier `generated_reports/`.
 Pour assurer la qualité du code et sa conformité à la norme **PEP 8**, ce projet utilise `flake8` 
 avec le plugin `flake8-html`, tous les deux inclus dans `requirements.txt` déjà installés précédemment.
 
-Cela permet de générer automatiquement un rapport HTML à chaque exécution de la commande `flake8 .`.
+Cela permet de générer automatiquement un rapport HTML à chaque exécution de la commande `flake8 .`
+Ce rapport est disponible dans le dossier `flake8_rapport/`.
 
-### Génération d’un rapport HTML flake8
+### Génération du rapport HTML flake8
+
+Voici les étapes pour générer un nouveau rapport **flake8**: 
 
 1. Exécutez la commande suivante depuis la racine du projet :
 ```
