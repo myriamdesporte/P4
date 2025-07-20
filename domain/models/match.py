@@ -24,6 +24,10 @@ class Match:
         """
         self.data = ([player1, player1_score], [player2, player2_score])
 
+    def __str__(self) -> str:
+        """Returns a readable string representation of the match with player names and scores."""
+        return f"{self.data[0][0]}({self.data[0][1]}) - {self.data[1][0]}({self.data[1][1]})"
+
     def get_players(self) -> Tuple[Player, Player]:
         """Return the two players of a match."""
         return self.data[0][0], self.data[1][0]

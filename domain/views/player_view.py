@@ -5,8 +5,8 @@ from rich.table import Table
 from rich.panel import Panel
 
 from domain.controllers.player_controller import PlayerController
+from domain.views.components.input_view import InputView
 from infra.repositories.json_player_repository import JSONPlayerRepository
-from infra.utils.validators import is_valid_name, is_valid_birth_date, is_valid_national_chess_id
 
 
 class PlayerView:
@@ -16,6 +16,7 @@ class PlayerView:
         """
         self.controller = PlayerController(JSONPlayerRepository())
         self.console = Console(force_terminal=True)
+        self.input_view = InputView(self.console)
 
     def display_menu(self):
         """
@@ -87,30 +88,10 @@ class PlayerView:
         """Prompt for new player details and create the player via the controller."""
         self.console.print("\n[bold blue]Entrez les informations du joueur:[/bold blue]")
 
-        while True:
-            last_name = input("Nom de famille: ").strip()
-            if is_valid_name(last_name):
-                break
-            self.console.print("[bold red]Nom invalide. Veuillez réessayer.[/bold red]")
-
-        while True:
-            first_name = input("Prénom: ").strip()
-            if is_valid_name(first_name):
-                break
-            self.console.print("[bold red]Prénom invalide. Veuillez réessayer.[/bold red]")
-
-        while True:
-            birth_date = input("Date de naissance (format JJ-MM-AAAA): ").strip()
-            if is_valid_birth_date(birth_date):
-                break
-            self.console.print("[bold red]Format invalide. Utilisez JJ-MM-AAAA.")
-
-        while True:
-            national_chess_id = input("Identifiant national d'échecs (ex: AB12345): ").strip()
-            if is_valid_national_chess_id(national_chess_id):
-                break
-            self.console.print("[bold red]Identifiant invalide. Veuillez réessayer."
-                               "Format attendu : 2 lettres suivies de 5 chiffres (ex: AB12345).[/bold red]")
+        last_name = self.input_view.input_name(name_type="Nom", add_on="de famille")
+        first_name = self.input_view.input_name(name_type="Prénom")
+        birth_date = self.input_view.input_date(date_type="Date de naissance")
+        national_chess_id = self.input_view.input_national_chess_id()
 
         player = self.controller.create_player(
             last_name, first_name, birth_date, national_chess_id
@@ -126,14 +107,9 @@ class PlayerView:
         self.console.print("\n[bold blue]Entrez l'identifiant national "
                            "d'échecs du joueur à mettre à jour: [/bold blue]")
 
-        while True:
-            national_chess_id = input()
-            if is_valid_national_chess_id(national_chess_id):
-                break
-            self.console.print("[bold red]Identifiant invalide. "
-                               "Veuillez réessayer.[/bold red]")
-
+        national_chess_id = self.input_view.input_national_chess_id()
         player = self.controller.get_by_id(national_chess_id)
+
         if not player:
             self.console.print(f"[bold red]Aucun joueur trouvé pour l'identifiant "
                                f"{national_chess_id}.[/bold red]")
@@ -149,31 +125,15 @@ class PlayerView:
 
         self.console.print("[bold blue]Laissez vide les champs à conserver.[/bold blue]")
 
-        while True:
-            new_last_name = input("Nom de famille: ").strip()
-            if not new_last_name or is_valid_name(new_last_name):
-                break
-            self.console.print(
-                "[bold red]Nom invalide. Veuillez réessayer.[/bold red]")
-
-        while True:
-            new_first_name = input("Prénom: ").strip()
-            if not new_first_name or is_valid_name(new_first_name):
-                break
-            self.console.print(
-                "[bold red]Prénom invalide. Veuillez réessayer.[/bold red]")
-
-        while True:
-            new_birth_date = input("Date de naissance (JJ-MM-AAAA): ").strip()
-            if not new_birth_date or is_valid_birth_date(new_birth_date):
-                break
-            self.console.print("[bold red]Format invalide. Utilisez JJ-MM-AAAA.[/bold red]")
+        new_last_name = self.input_view.input_name(name_type="Nom", add_on="de famille", allow_empty=True)
+        new_first_name = self.input_view.input_name(name_type="Prénom", allow_empty=True)
+        new_birth_date = self.input_view.input_date(date_type="Date de naissance", allow_empty=True)
 
         success = self.controller.update_player(
-            national_chess_id,
-            new_last_name or None,
-            new_first_name or None,
-            new_birth_date or None
+            national_chess_id=national_chess_id,
+            last_name=new_last_name or None,
+            first_name=new_first_name or None,
+            birth_date=new_birth_date or None
         )
 
         if success:
@@ -188,12 +148,7 @@ class PlayerView:
         self.console.print("\n[bold blue]Entrez l'identifiant national "
                            "d'échecs du joueur à supprimer: [/bold blue]")
 
-        while True:
-            national_chess_id = input()
-            if is_valid_national_chess_id(national_chess_id):
-                break
-            self.console.print("[bold red]Identifiant invalide. "
-                               "Veuillez réessayer.[/bold red]")
+        national_chess_id = self.input_view.input_national_chess_id()
 
         player = self.controller.get_by_id(national_chess_id)
         if not player:

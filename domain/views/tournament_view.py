@@ -10,6 +10,7 @@ from domain.controllers.player_controller import PlayerController
 from domain.controllers.round_controller import RoundController
 from domain.controllers.tournament_controller import TournamentController
 from domain.models.match import Match
+from domain.views.components.input_view import InputView
 from infra.repositories.json_player_repository import JSONPlayerRepository
 from infra.repositories.json_tournament_repository import JSONTournamentRepository
 from infra.utils.match_utils import match_with_loaded_players
@@ -32,6 +33,7 @@ class TournamentView:
             tournament_repository=JSONTournamentRepository()
         )
         self.console = Console(force_terminal=True)
+        self.input_view = InputView(self.console)
 
     def display_menu(self):
         """
@@ -110,13 +112,14 @@ class TournamentView:
         Prompt for new tournament details and create the tournament via the controller.
         """
         self.console.print("\n[bold blue]Entrez les informations du tournoi :[/bold blue]")
-        name = input("Nom du tournoi : ").strip()
-        location = input("Lieu : ").strip()
-        start_date = input("Date de début (format JJ-MM-AAAA) : ").strip()
-        end_date = input("Date de fin (format JJ-MM-AAAA) : ").strip()
-        nb = input("Nombre de rounds (4 par défaut) : ")
-        number_of_rounds = int(nb) if nb != "" else 4
+
+        name = self.input_view.input_name(name_type="Nom", add_on="du tournoi")
+        location = self.input_view.input_name(name_type="Lieu")
+        start_date = self.input_view.input_start_date()
+        end_date = self.input_view.input_end_date(start_date=start_date)
+        number_of_rounds = self.input_view.input_number_of_rounds()
         description = input("Description (Facultatif): ")
+
         tournament = self.tournament_controller.create_tournament(
             name=name,
             location=location,
@@ -134,7 +137,8 @@ class TournamentView:
         self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
         self.list_tournaments_flow()
 
-        tournament_id = input("Entrez l'ID du tournoi:")
+        self.console.print("\n[bold blue]Entrez l'ID du tournoi:[/bold blue]")
+        tournament_id = self.input_view.input_tournament_id()
         tournament = self.tournament_controller.get_by_id(tournament_id)
 
         if not tournament:
@@ -148,15 +152,17 @@ class TournamentView:
         self.console.print(f"Statut actuel : [green]{tournament.status}[/green]")
 
         while True:
-            player_id = input("Entrez l'identifiant du joueur à ajouter au tournoi:")
+            self.console.print("\n[bold blue]Entrez l'identifiant du joueur à ajouter au tournoi:")
+
+            player_id = self.input_view.input_national_chess_id()
             player = self.tournament_controller.player_repository.get_by_id(player_id)
 
             if player is None:
                 self.console.print("[bold blue]Joueur non trouvé. "
                                    "Création d'un nouveau joueur :[/bold blue]")
-                last_name = input("Nom de famille: ").strip()
-                first_name = input("Prénom: ").strip()
-                birth_date = input("Date de naissance (format JJ-MM-AAAA): ").strip()
+                last_name = self.input_view.input_name(name_type="Nom", add_on="de famille")
+                first_name = self.input_view.input_name(name_type="Prénom")
+                birth_date = self.input_view.input_date(date_type="Date de naissance")
 
                 self.player_controller.create_player(
                     last_name=last_name,
@@ -189,15 +195,18 @@ class TournamentView:
 
                 self.console.print(f"[green]Joueur {player} ajouté avec succès.[/green]")
 
-            add_another = input("Voulez-vous ajouter un autre joueur à ce tournoi? (O/n): ").strip().lower()
-            if add_another not in ["", "o", "oui"]:
+            self.console.print("[bold yellow]Voulez-vous ajouter un autre joueur à ce tournoi? (O/n): [/bold yellow] ")
+            answer = input().strip().lower()
+            if answer not in ["", "o", "oui"]:
                 break
 
     def start_tournament_flow(self):
         """Start a selected tournament and generate the first round."""
         self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
         self.list_tournaments_flow()
-        tournament_id = input("Entrez un ID de tournoi:")
+
+        self.console.print("\n[bold blue]Entrez l'ID du tournoi:[/bold blue]")
+        tournament_id = self.input_view.input_tournament_id()
         tournament = self.tournament_controller.get_by_id(tournament_id)
 
         if not tournament:
@@ -247,7 +256,9 @@ class TournamentView:
         """Prompt results for matches in the current round of a tournament."""
         self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
         self.list_tournaments_flow()
-        tournament_to_be_played_id = input("Entrez un ID de tournoi:")
+
+        self.console.print("\n[bold blue]Entrez l'ID du tournoi:[/bold blue]")
+        tournament_to_be_played_id = self.input_view.input_tournament_id()
         tournament = self.tournament_controller.get_by_id(tournament_to_be_played_id)
 
         if tournament.status != "En cours":
@@ -292,7 +303,8 @@ class TournamentView:
                     self.console.print(match)
                     break
                 else:
-                    self.console.print("Choix invalide. Réessayez.")
+                    self.console.print("[bold red]Choix invalide. "
+                                       "Veuillez réessayer.[/bold red]")
 
             current_round.matches[i - 1] = match
 
@@ -346,8 +358,14 @@ class TournamentView:
 
         self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
         self.list_tournaments_flow()
-        tournament_id = input("Entrez un ID de tournoi: ")
+
+        self.console.print("\n[bold blue]Entrez l'ID du tournoi:[/bold blue]")
+        tournament_id = self.input_view.input_tournament_id()
         tournament = self.tournament_controller.get_by_id(tournament_id)
+
+        if not tournament:
+            self.console.print("[bold red]Tournoi introuvable. Veuillez d'abord créer le tournoi.[/bold red]")
+            return
 
         self.console.print(f"\n[cyan]{tournament.name} à {tournament.location} - "
                            f"{tournament.status}\n")

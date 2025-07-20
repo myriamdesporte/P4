@@ -99,7 +99,7 @@ class ReportController:
             template_name: str,
             output_dir: str,
             tournament_id: str,
-    ) -> str:
+    ) -> str | None:
         """
         Generate an HTML detailed report for a single tournament.
 
@@ -113,8 +113,13 @@ class ReportController:
             str: Path to the generated HTML report.
         """
 
+        tournament = self.tournament_repository.get_by_id(tournament_id)
+
+        if not tournament:
+            return None
+
         tournament = tournament_with_loaded_players(
-            tournament=self.tournament_repository.get_by_id(tournament_id),
+            tournament=tournament,
             player_repository=self.player_repository
         )
 

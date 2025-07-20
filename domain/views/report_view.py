@@ -8,6 +8,7 @@ from rich.table import Table
 from rich.panel import Panel
 
 from domain.controllers.report_controller import ReportController
+from domain.views.components.input_view import InputView
 from domain.views.tournament_view import TournamentView
 from config import (
     TEMPLATE_DIR,
@@ -32,6 +33,7 @@ class ReportView:
             tournament_repository=JSONTournamentRepository()
         )
         self.console = Console(force_terminal=True)
+        self.input_view = InputView(self.console)
         self.tournament_view = TournamentView()
 
     def display_menu(self):
@@ -91,13 +93,21 @@ class ReportView:
     def show_tournament_details_flow(self):
         self.console.print("\n[bold blue]Voici l'ensemble des tournois:[/bold blue]")
         self.tournament_view.list_tournaments_flow()
-        tournament_id = input("Entrez un ID de tournoi: ")
+        self.console.print("\n[bold blue]Entrez l'ID du tournoi:[/bold blue]")
+        tournament_id = self.input_view.input_tournament_id()
+
         tournament_details_report_path = self.controller.generate_tournament_details_report(
             template_dir=TEMPLATE_DIR,
             template_name=TOURNAMENT_DETAILS_TEMPLATE_NAME,
             output_dir=GENERATED_REPORTS_DIR,
             tournament_id=tournament_id,
         )
+
+        if tournament_details_report_path is None:
+            self.console.print("[bold red]Tournoi introuvable. "
+                               "Veuillez d'abord créer le tournoi.[/bold red]")
+            return
+
         report_name = Path(tournament_details_report_path).name
         webbrowser.open(f"file://{tournament_details_report_path}")
         self.console.print(f"\n[bold green] 📄Rapport {report_name} généré et ouvert dans le navigateur.[/bold green]")
