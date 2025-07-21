@@ -97,9 +97,10 @@ class TournamentView:
         table.add_column("Date début", style="white", justify="center")
         table.add_column("Date fin", style="white", justify="center")
         table.add_column("Description", style="dim")
-        table.add_column("ID", style="bold blue")
-        table.add_column("Status", style="bold blue")
+        table.add_column("ID", justify="center", style="cyan")
+        table.add_column("Progress", justify="center", style="cyan")
         for tournament in tournaments:
+            progress = f"{tournament.current_round_number}/{tournament.number_of_rounds}"
             table.add_row(
                 tournament.name,
                 tournament.location,
@@ -107,8 +108,9 @@ class TournamentView:
                 tournament.end_date,
                 tournament.description,
                 tournament.tournament_id,
-                tournament.status
+                f"{tournament.status}\n({progress})"
             )
+            table.add_row()
         self.console.print(table)
 
     def add_tournament_flow(self):
