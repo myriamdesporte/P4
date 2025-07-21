@@ -8,6 +8,8 @@ from rich.table import Table
 from rich.panel import Panel
 
 from domain.controllers.report_controller import ReportController
+from domain.ports.player_repository import IPlayerRepository
+from domain.ports.tournament_repository import ITournamentRepository
 from domain.views.components.input_view import InputView
 from domain.views.tournament_view import TournamentView
 from config import (
@@ -19,22 +21,27 @@ from config import (
     TOURNAMENT_DETAILS_TEMPLATE_NAME,
     GENERATED_REPORTS_DIR
 )
-from infra.repositories.json_player_repository import JSONPlayerRepository
-from infra.repositories.json_tournament_repository import JSONTournamentRepository
 
 
 class ReportView:
-    def __init__(self):
+    def __init__(
+            self,
+            player_repository: IPlayerRepository,
+            tournament_repository: ITournamentRepository
+    ):
         """
-        Initialize the view with a ReportController instance and Rich Console.
+        Initialize the report view with controller, console, and sub-views.
         """
         self.controller = ReportController(
-            player_repository=JSONPlayerRepository(),
-            tournament_repository=JSONTournamentRepository()
+            player_repository=player_repository,
+            tournament_repository=tournament_repository
         )
         self.console = Console(force_terminal=True)
         self.input_view = InputView(self.console)
-        self.tournament_view = TournamentView()
+        self.tournament_view = TournamentView(
+            player_repository=player_repository,
+            tournament_repository=tournament_repository
+        )
 
     def display_menu(self):
         """

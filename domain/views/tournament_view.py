@@ -10,27 +10,31 @@ from domain.controllers.player_controller import PlayerController
 from domain.controllers.round_controller import RoundController
 from domain.controllers.tournament_controller import TournamentController
 from domain.models.match import Match
+from domain.ports.player_repository import IPlayerRepository
+from domain.ports.tournament_repository import ITournamentRepository
 from domain.views.components.input_view import InputView
-from infra.repositories.json_player_repository import JSONPlayerRepository
-from infra.repositories.json_tournament_repository import JSONTournamentRepository
 from infra.utils.match_utils import match_with_loaded_players
 from infra.utils.tournament_utils import create_pairs_for_next_round
 
 
 class TournamentView:
-    def __init__(self):
+    def __init__(
+            self,
+            player_repository: IPlayerRepository,
+            tournament_repository: ITournamentRepository
+    ):
         """
-        Initialize the view with controllers and Rich Console
+        Initialize the tournament view with controllers, console, and sub-views.
         """
         self.tournament_controller = TournamentController(
-            tournament_repository=JSONTournamentRepository(),
-            player_repository=JSONPlayerRepository()
+            tournament_repository=tournament_repository,
+            player_repository=player_repository
         )
         self.player_controller = PlayerController(
-            repository=JSONPlayerRepository()
+            repository=player_repository
         )
         self.round_controller = RoundController(
-            tournament_repository=JSONTournamentRepository()
+            tournament_repository=tournament_repository
         )
         self.console = Console(force_terminal=True)
         self.input_view = InputView(self.console)

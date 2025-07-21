@@ -4,20 +4,34 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
+from domain.ports.player_repository import IPlayerRepository
+from domain.ports.tournament_repository import ITournamentRepository
 from domain.views.player_view import PlayerView
 from domain.views.report_view import ReportView
 from domain.views.tournament_view import TournamentView
 
 
 class MainMenuView:
-    def __init__(self):
-        """Initialize subviews and Rich console."""
-        self.player_view = PlayerView()
-        self.tournament_view = TournamentView()
-        self.report_view = ReportView()
+    def __init__(
+            self,
+            player_repository: IPlayerRepository,
+            tournament_repository: ITournamentRepository
+    ):
+        """Initialize with subviews and Rich console."""
+        self.player_view = PlayerView(
+            repository=player_repository
+        )
+        self.tournament_view = TournamentView(
+            player_repository=player_repository,
+            tournament_repository=tournament_repository
+        )
+        self.report_view = ReportView(
+            player_repository=player_repository,
+            tournament_repository=tournament_repository
+        )
         self.console = Console(force_terminal=True)
 
-    def display_menu(self):
+    def run(self):
         """
         Display the main menu and route user commands to corresponding views.
         Loop until user chooses to quit.

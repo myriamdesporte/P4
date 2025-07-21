@@ -5,16 +5,16 @@ from rich.table import Table
 from rich.panel import Panel
 
 from domain.controllers.player_controller import PlayerController
+from domain.ports.player_repository import IPlayerRepository
 from domain.views.components.input_view import InputView
-from infra.repositories.json_player_repository import JSONPlayerRepository
 
 
 class PlayerView:
-    def __init__(self):
+    def __init__(self, repository: IPlayerRepository):
         """
-        Initialize the view with a PlayerController instance and Rich Console.
+        Initialize the player view with controller, console, and sub-views.
         """
-        self.controller = PlayerController(JSONPlayerRepository())
+        self.controller = PlayerController(repository)
         self.console = Console(force_terminal=True)
         self.input_view = InputView(self.console)
 
